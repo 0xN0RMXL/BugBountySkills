@@ -346,7 +346,7 @@ This system synthesizes knowledge from:
 - **The Tangled Web** — Michal Zalewski
 - **JavaScript for Hackers** — Gareth Heyes
 - **Black Hat Python** — Justin Seitz
-- **zseano's methodology**, **jhaddix Bug Hunter's Methodology Day 1 + 2**
+- **zseano's methodology**, **jhaddix Bug Hunter's Methodology**
 - **NahamSec / Stök / IppSec / LiveOverflow** content
 - **Trail of Bits / Doyensec / NCC Group** research
 - **OWASP Cheat Sheet Series** + Testing Guide
