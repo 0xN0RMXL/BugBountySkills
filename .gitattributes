@@ -1,0 +1,12 @@
+# GitHub Linguist classification
+# This is a documentation/knowledge repo — Markdown should be the primary language.
+
+*.md linguist-detectable=true
+*.md linguist-documentation=false
+
+# Exclude generator scripts from language stats
+scripts/* linguist-vendored=true
+scripts/**/*.py linguist-vendored=true
+
+# Reference text dumps (extracted from PDFs) shouldn't count
+REFERENCE/* linguist-generated=true

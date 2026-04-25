@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Quick Reference Card
+    url: https://github.com/0xN0RMXL/BugBountySkills/blob/main/QUICK_REFERENCE.md
+    about: One-page operational cheatsheet
+  - name: Day-1 Setup Guide
+    url: https://github.com/0xN0RMXL/BugBountySkills/blob/main/DAY1_SETUP.md
+    about: Deploy and start hunting in 5 minutes
