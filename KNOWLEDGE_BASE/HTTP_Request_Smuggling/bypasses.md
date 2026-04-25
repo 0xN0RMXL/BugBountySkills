@@ -14,7 +14,7 @@ related_vulns: ["Information_Disclosure", "Broken_Access_Control", "SSRF"]
 
 # HTTP Request Smuggling — Bypasses
 
- This bypass strategy involves manipulating standard HTTP transport mechanics to evade signature detection. This bypass strategy involves manipulating standard HTTP transport mechanics to evade signature detection.
+ This bypass strategy involves manipulating standard HTTP transport mechanics to evade signature detection.
 ## WAF Bypasses
 
 ### Generic WAF Bypasses Approach

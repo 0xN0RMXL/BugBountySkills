@@ -15,7 +15,7 @@ related_vulns: ["Information_Disclosure", "Broken_Access_Control", "SSRF"]
 
 # API Security — Payloads
 
- This payload structure operates reliably against standard implementations lacking modern security boundaries or active request filtering components. This payload structure operates reliably against standard implementations lacking modern security boundaries or active request filtering components.
+ This payload structure operates reliably against standard implementations lacking modern security boundaries or active request filtering components.
 
 > [!TIP]
 > Always iterate. Test a canary token to figure out parsing logic, then increment to full payload structures.
@@ -329,5 +329,4 @@ handleRoutePushEvent({pathname: e, search: t, state: a, hash: o}) {
 **Bypasses:** WAF / Input Validation Filter
 **Framework:** Framework-agnostic
 **Source:** [Report #1065041](https://hackerone.com/reports/1065041)
-
 

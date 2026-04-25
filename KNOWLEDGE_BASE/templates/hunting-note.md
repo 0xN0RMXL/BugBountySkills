@@ -18,12 +18,9 @@ tags:
 
 ## Recon Notes
 
-
 ## Findings
 
-
 ## Payloads Tested
-
 
 ## Status
 - [ ] Recon complete

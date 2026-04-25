@@ -11,12 +11,9 @@ tags:
 
 ## Key Takeaways
 
-
 ## Applicable Techniques
 
-
 ## Related Reports
-
 
 ## Notes
 

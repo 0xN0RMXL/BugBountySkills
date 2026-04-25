@@ -137,4 +137,3 @@ International: ███
 **Framework:** Framework-agnostic
 **Source:** [Report #1189282](https://hackerone.com/reports/1189282)
 
-

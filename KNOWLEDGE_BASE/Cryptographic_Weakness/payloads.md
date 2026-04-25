@@ -189,4 +189,3 @@ nli@nlistation:~$ dig mycrypto.com txt
 **Framework:** Framework-agnostic
 **Source:** [Report #1125143](https://hackerone.com/reports/1125143)
 
-

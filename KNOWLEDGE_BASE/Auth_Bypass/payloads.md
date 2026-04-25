@@ -175,4 +175,3 @@ end
 **Framework:** Framework-agnostic
 **Source:** [Report #1043480](https://hackerone.com/reports/1043480)
 
-

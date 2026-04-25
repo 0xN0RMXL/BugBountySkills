@@ -121,7 +121,6 @@ processInput('Source Code Disclosure_context', user_input);
 processInput('Source Code Disclosure_context', escapeAndSanitize(user_input));
 ```
 
-
 ## Root Cause Analysis
 
 ### 1. Context Confusion

@@ -14,7 +14,7 @@ related_vulns: ["Broken_Access_Control", "SSRF"]
 
 # Information Disclosure — Bypasses
 
- This bypass strategy involves manipulating standard HTTP transport mechanics to evade signature detection. This bypass strategy involves manipulating standard HTTP transport mechanics to evade signature detection.
+ This bypass strategy involves manipulating standard HTTP transport mechanics to evade signature detection.
 ## WAF Bypasses
 
 ### Generic WAF Bypasses Approach

@@ -150,4 +150,3 @@ X-Frame-Options: ALLOW-FROM https://twitter.com/
 **Framework:** Framework-agnostic
 **Source:** [Report #1176104](https://hackerone.com/reports/1176104)
 
-

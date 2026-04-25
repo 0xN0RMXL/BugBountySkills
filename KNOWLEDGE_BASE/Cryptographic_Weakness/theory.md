@@ -106,7 +106,6 @@ processInput('Missing Encryption_context', user_input);
 processInput('Missing Encryption_context', escapeAndSanitize(user_input));
 ```
 
-
 ## Root Cause Analysis
 
 ### 1. Context Confusion

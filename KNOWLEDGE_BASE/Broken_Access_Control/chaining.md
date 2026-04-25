@@ -17,8 +17,6 @@ related_vulns: ["Information_Disclosure", "SSRF"]
 
 Chaining vulnerabilities amplifies the overall blast radius of an exploit sequence, moving a low impact contextual bypass into a highly critical state compromise.
 
-
-
 ## Chains That Start With This Type
 
 ### Broken_Access_Control → Account Takeover → Privilege Escalation
