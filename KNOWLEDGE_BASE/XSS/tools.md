@@ -17,7 +17,6 @@ related_vulns: ["Information_Disclosure", "Broken_Access_Control", "SSRF"]
 
  This tool specifically optimizes the discovery rate by automating complex parameter permutations and rendering context evaluations across deep application trees.
 
-
 ## Active Scanners
 
 ### Burp Suite Professional

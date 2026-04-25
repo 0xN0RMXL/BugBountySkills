@@ -209,4 +209,3 @@ https://engineeringblog.yelp.com/xxcrlftest%0d%0aSet-Cookie:%20test=test;domain=
 **Framework:** Framework-agnostic
 **Source:** [Report #146416](https://hackerone.com/reports/146416)
 
-

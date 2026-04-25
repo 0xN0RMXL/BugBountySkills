@@ -13,7 +13,7 @@ related_vulns: ["Broken_Access_Control", "SSRF"]
 ---
 # Information Disclosure — Attack Scenarios
 
- This step-by-step reconstruction faithfully dictates the precise procedural methodology implemented by top earners across the platform to accurately recreate the vulnerability sequence on production instances. This step-by-step reconstruction faithfully dictates the precise procedural methodology implemented by top earners across the platform to accurately recreate the vulnerability sequence on production instances.
+ This step-by-step reconstruction faithfully dictates the precise procedural methodology implemented by top earners across the platform to accurately recreate the vulnerability sequence on production instances.
 
 ---
 ### Scenario 1: General Attack Flow

@@ -17,7 +17,6 @@ related_vulns: ["Information_Disclosure", "Broken_Access_Control", "SSRF"]
 
  This payload structure operates reliably against standard implementations lacking modern security boundaries or active request filtering components.
 
-
 > [!TIP]
 > Always iterate. Test a canary token to figure out parsing logic, then increment to full payload structures.
 
@@ -142,5 +141,4 @@ X-Forwarded-Host: your_hackerz_site.com
 **Bypasses:** No special bypass needed
 **Framework:** Framework-agnostic
 **Source:** [Report #1219038](https://hackerone.com/reports/1219038)
-
 

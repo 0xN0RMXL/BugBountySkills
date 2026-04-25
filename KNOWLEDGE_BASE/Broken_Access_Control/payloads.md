@@ -193,4 +193,3 @@ POST /apps/deck/cards HTTP/1.1
 **Framework:** Framework-agnostic
 **Source:** [Report #1066203](https://hackerone.com/reports/1066203)
 
-

@@ -17,7 +17,6 @@ related_vulns: ["Information_Disclosure", "Broken_Access_Control", "SSRF"]
 
  This payload structure operates reliably against standard implementations lacking modern security boundaries or active request filtering components.
 
-
 > [!TIP]
 > Always iterate. Test a canary token to figure out parsing logic, then increment to full payload structures.
 
@@ -131,5 +130,4 @@ Cookie: _ga=GA1.2.1700054986.1696324867; _ga_CSLL4ZEK4L=GS1.1.1696324866.1.1.169
 **Bypasses:** WAF / Input Validation Filter
 **Framework:** Framework-agnostic
 **Source:** [Report #1046630](https://hackerone.com/reports/1046630)
-
 

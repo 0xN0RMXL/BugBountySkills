@@ -180,4 +180,3 @@ AKIAJRT6BUQHIPYENYWQ
 **Framework:** Framework-agnostic
 **Source:** [Report #1063371](https://hackerone.com/reports/1063371)
 
-

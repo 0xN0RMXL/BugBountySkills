@@ -175,4 +175,3 @@ query { user(username:"<victim>"){ email username } }
 **Framework:** Framework-agnostic
 **Source:** [Report #1084904](https://hackerone.com/reports/1084904)
 
-

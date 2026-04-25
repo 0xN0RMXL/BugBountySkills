@@ -17,7 +17,6 @@ related_vulns: ["Information_Disclosure", "Broken_Access_Control", "SSRF"]
 
  The methodical execution of this phase guarantees definitive coverage over the targeted attack surface, enabling comprehensive discovery without alerting defensive mechanisms.
 
-
 ### Phase 1: Reconnaissance
 **Step 1.1 — Map all input vectors**
 Use Burp Suite's passive scanner while browsing the application normally. Every parameter that appears in the response source is a reflection candidate.

@@ -144,4 +144,3 @@ http://git.php.net/?p=php-src.git;a=commit;h=780daee62b55995a10f8e849159eff0a25b
 **Framework:** Framework-agnostic
 **Source:** [Report #1415436](https://hackerone.com/reports/1415436)
 
-

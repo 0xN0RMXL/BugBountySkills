@@ -166,4 +166,3 @@ Vary:... This report describes a CORS_Misconfiguration issue affecting the targe
 **Framework:** Framework-agnostic
 **Source:** [Report #1189363](https://hackerone.com/reports/1189363)
 
-

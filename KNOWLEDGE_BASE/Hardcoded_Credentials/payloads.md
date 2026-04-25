@@ -133,4 +133,3 @@ password=admin username=admin
 **Framework:** Framework-agnostic
 **Source:** [Report #1168104](https://hackerone.com/reports/1168104)
 
-

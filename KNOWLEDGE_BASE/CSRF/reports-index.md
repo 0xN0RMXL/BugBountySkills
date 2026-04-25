@@ -72,7 +72,6 @@ related_vulns: ["Information_Disclosure", "Broken_Access_Control", "SSRF"]
 **Filed by:** email
 **Why it's notable:** This report highlights a severe execution context proving that modern defenses can be bypassed completely. The high bounty reflects the massive attack surface and ease of exploitation.
 
-
 ## All Reports
 
 | ID | Title | Program | Severity | Bounty | Sub-type | Quality | URL |

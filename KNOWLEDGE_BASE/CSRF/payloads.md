@@ -15,7 +15,7 @@ related_vulns: ["Information_Disclosure", "Broken_Access_Control", "SSRF"]
 
 # CSRF — Payloads
 
- This payload structure operates reliably against standard implementations lacking modern security boundaries or active request filtering components. This payload structure operates reliably against standard implementations lacking modern security boundaries or active request filtering components.
+ This payload structure operates reliably against standard implementations lacking modern security boundaries or active request filtering components.
 
 > [!TIP]
 > Always iterate. Test a canary token to figure out parsing logic, then increment to full payload structures.
@@ -137,5 +137,4 @@ TOKEN
 **Bypasses:** WAF / Input Validation Filter
 **Framework:** Framework-agnostic
 **Source:** [Report #1018270](https://hackerone.com/reports/1018270)
-
 

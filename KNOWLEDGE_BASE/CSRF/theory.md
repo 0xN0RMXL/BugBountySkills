@@ -91,7 +91,6 @@ processInput('CSRF Token Bypass_context', user_input);
 processInput('CSRF Token Bypass_context', escapeAndSanitize(user_input));
 ```
 
-
 ## Root Cause Analysis
 
 ### 1. Context Confusion

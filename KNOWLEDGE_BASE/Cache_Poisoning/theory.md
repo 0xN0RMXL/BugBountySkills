@@ -31,7 +31,6 @@ processInput('General_context', user_input);
 processInput('General_context', escapeAndSanitize(user_input));
 ```
 
-
 ## Root Cause Analysis
 
 ### 1. Context Confusion
@@ -53,7 +52,7 @@ When you're hunting for this vulnerability, you must think like an adversary par
 
 Identify the actual parsing technology used in the backend. If you know the backend runs Node.js vs PHP, your payload structure changes dramatically. Common false positives happen when the input is reflected safely as a string — a successful hunt confirms that the string is actually interpreted as code or structural metadata by the underlying environment.
 
- The theoretical underpinnings of this vulnerability stem from the fundamental concept of context switching in modern web application design. When untrusted user data crosses a trust boundary, the receiving context must understand how to safely interpret that data. The theoretical underpinnings of this vulnerability stem from the fundamental concept of context switching in modern web application design. When untrusted user data crosses a trust boundary, the receiving context must understand how to safely interpret that data.
+ The theoretical underpinnings of this vulnerability stem from the fundamental concept of context switching in modern web application design. When untrusted user data crosses a trust boundary, the receiving context must understand how to safely interpret that data.
 ## Common Misconceptions
 
 > [!WARNING]
