@@ -1,0 +1,11 @@
+# Checklist: CORS
+- [ ] Send Origin: https://attacker.tld → check ACAO + ACAC headers
+- [ ] Test Origin: null (sandboxed iframe)
+- [ ] Test prefix: https://allowed.com.attacker.tld
+- [ ] Test suffix: https://attacker.com → if allowed
+- [ ] Test path: https://attacker.com/allowed.com
+- [ ] Test scheme: https://attacker.com vs http://attacker.com
+- [ ] Confirm endpoint actually serves authenticated data (not public)
+- [ ] If ACAC:true and Origin reflected → high-impact CORS
+- [ ] PoC: cross-origin fetch with credentials → exfil response
+- [ ] Test on every authenticated GET endpoint, not just /api/me

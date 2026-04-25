@@ -1,0 +1,11 @@
+# Checklist: AWS Recon
+- [ ] Find AWS account ID (from policies, error messages, CloudFront responses)
+- [ ] S3 bucket name brute (target name + variations: -dev, -prod, -staging, -backup)
+- [ ] Use cloud_enum, S3Scanner
+- [ ] Check public ECR images (`aws ecr-public describe-repositories --region us-east-1`)
+- [ ] Check public AMIs (`aws ec2 describe-images --owners <accountid>`)
+- [ ] Check exposed ELB endpoints (DNS pattern)
+- [ ] CloudFront distribution origin discovery (cf-id, certs, JARM)
+- [ ] Lambda function URLs (public-by-default)
+- [ ] Cognito user pools (default UI exposed)
+- [ ] API Gateway stages with default-allow

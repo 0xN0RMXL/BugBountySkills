@@ -1,0 +1,16 @@
+# Checklist: JWT
+- [ ] Decode header + payload (jwt.io / jwt_tool)
+- [ ] Test alg:none variants
+- [ ] Test HS256 with known weak keys (rockyou, common secrets)
+- [ ] Test alg confusion RS256 → HS256 (sign with public key as HS secret)
+- [ ] Test kid injection (path traversal, SQLi)
+- [ ] Test jku / x5u to attacker-controlled JWKS
+- [ ] Test embedded jwk in header
+- [ ] Test trailing whitespace / case variants on alg
+- [ ] Test missing signature
+- [ ] Test signature truncation
+- [ ] Test exp / nbf / iat / aud / iss validation (manipulate to bypass)
+- [ ] Test sub / role manipulation
+- [ ] Test re-use after logout (revocation list?)
+- [ ] Test cross-tenant token reuse
+- [ ] Test token in Authorization header vs cookie vs body

@@ -1,0 +1,16 @@
+# Checklist: IDOR / BOLA / BFLA
+- [ ] Identify object IDs in URLs, body, headers (id, uid, account, org, doc, file, ticket)
+- [ ] Sequential IDs — try ID±1, ID±100, IDs from other accounts
+- [ ] UUIDs — collect over time, look for predictable v1 (timestamp-based)
+- [ ] GET → swap with another user's ID → check for data leak
+- [ ] PUT/POST/DELETE → swap with another user's ID → check for write/delete
+- [ ] Verb tampering: GET → DELETE on /api/users/X
+- [ ] HTTP Parameter Pollution: ?id=mine&id=yours
+- [ ] Headers: X-User-ID, X-Tenant-ID, X-Account-ID
+- [ ] Cookie modification (session-bound role cookies)
+- [ ] JWT claims (sub, role) — re-sign if HS256/none possible
+- [ ] Try with multiple session types (free/paid/admin/staff)
+- [ ] BFLA: try admin endpoints with regular user token
+- [ ] Test edge IDs (0, -1, MAX_INT, null, "")
+- [ ] Test object types you don't own (ticket created by other user)
+- [ ] Run Autorize (Burp ext) with a low-priv session for diff testing

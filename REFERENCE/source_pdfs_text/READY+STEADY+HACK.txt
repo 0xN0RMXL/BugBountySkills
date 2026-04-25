@@ -1,0 +1,291 @@
+READY, STEADY, HACK
+Starting Your Bug Hunting Journey
+Who am I?
+❖   Director of R&D and Co-Founder of Zinad IT
+❖   Former Tech. Lead at HackerOne.
+❖   Independent researcher/bug hunter.
+Agenda
+❖   Bug Hunting Introduction
+❖   Target Selection
+     ➢    Platforms
+     ➢    Bounty Amount
+     ➢    Target Type
+     ➢    Technologies
+❖   The Recon Process
+     ➢    DNS Enumeration
+     ➢    IP enumeration / Port Scanning
+     ➢    HTTP Enumeration
+     ➢    Dorking and Secrets Scan
+     ➢    Finding Interesting Domains and Endpoints
+❖   Real Life Examples
+     ➢    Quick Wins
+             ■     Google Docs Exposure
+             ■     8K SQL injection
+             ■     Simple XSS
+     ➢    Uber XSS
+     ➢    Duplicate Command Injection
+     ➢    Abusing filters to infiltrate data
+     ➢    Binary Example
+             ■     netconsd Heap Over Flow
+             ■     SparkAr RCEs
+Selecting
+Your
+Target
+Platforms
+❖   Popular platforms
+    ➢   Hackerone
+    ➢   BugCrowd
+    ➢   Intigriti
+    ➢   Yes we hack
+❖   Specialized Platforms
+    ➢   ZDI (Zero Day Initiave)
+    ➢   SSD Secure Disclosure
+    ➢   Immunefi
+    ➢   code4rena
+❖   Independent programs
+    ➢   https://firebounty.com/
+    ➢   https://disclose.io/programs/
+    ➢   https://chaos.projectdiscovery.io/#/
+Target Selection : Bounty Amount - Example one
+Target Selection : Bounty Amount - Meta (Facebook)
+Target Selection : Bounty Amount - Apple
+Target Selection : Target Type and Technologies
+❖   Play on your strengths, find what you’re good at
+The
+Recon
+Process
+The Recon Process
+❖   The main goal of recon is to increase the attack surface
+❖   You only need to collect the data that will help you later in the process
+❖   If something interesting found, you can go back to recon again, it’s not a one
+    time step
+❖   Also if you’re stuck with a target you need to go back to the recon step
+The Recon Process : DNS Enumeration
+❖   Collecting Subdomains
+    ➢   Passive
+         ■ Amass, Wayback Machine, crt.sh …etc (you can use subenum.sh)
+         ■ Chaos (https://chaos.projectdiscovery.io)
+         ■ Trickest Inventory (https://github.com/trickest/inventory)
+    ➢   Active
+         ■ Bruteforcing (dnsx or puredns)
+               ● Custom word lists
+               ● Find top subdomains (ex: dev.target.com or corp.target.com)
+                 ◆ you can use https://github.com/trickest/dsieve
+The Recon Process : IP Enumeration
+❖   Find the ASNs that belong to an organization using https://bgp.he.net/
+❖   Check PTR records to discover more subdomains
+❖   Shodan, censys …etc
+The Recon Process : HTTP Enumeration
+❖   HTTP Information Gathering
+    ➢   HTTPX
+         ■ For all discovered Subdomains run a single httpx command that will do the following
+                ● Grab the status code, response size and page title
+                ● Detect technologies
+                ● Take a screenshot and save the raw response
+    ➢   GoSpider : Spider the domains to find interesting endpoints and JS files.
+    ➢   Gau : Passive URL discovery
+    ➢   https://urlscan.io/
+    ➢   Exposed Api Docs
+    ➢   Exposed Docker Images
+    ➢   Github and Gitlab
+The Recon Process : Dorking and Secrets Scan
+❖   You can use chrome “Save All Resources” plugin to fully download a website
+    ➢   Scan the saved files using trivy and trufflehog for secrets
+    ➢   Analyze the code using codeql
+❖   Find github repositories related to the target
+    ➢   Scan for secrets using trivy and trufflehog
+    ➢   Find open-source projects and analyze them
+         ■ Useful to create a custom API list
+         ■ Can be scanned using static analysis tools like codeql
+The Recon Process : Finding Interesting Domains / Endpoints
+
+❖   You can “grep” for interesting domains, for example
+    ➢   Searching by product names : grafana, jenkins, mattermost ..etc.
+    ➢   Searching by interesting keywords : admin, dev, sandbox, testnet, blog, docs
+❖   You can grep by for interesting files and paths
+    ➢   Robots.txt and sitemap.xml
+    ➢   /api/ endpoints
+    ➢   /graphql endpoints
+    ➢   Saml, acs, logout, oauth, redirect
+❖   Analyze Javascript to discover endpoints, especially for static websites and
+    websites behind a login page
+❖   It’s hard to remember all of this, so using a tool like “gf” by tomnomnom can
+    be really useful
+Real
+Life
+Examples
+Easy Wins : Exposure of Google Docs
+
+
+                                                Found some interesting
+                       gospider to spider the   endpoints in the format
+  Domain enumeration
+                             website            /googledocs/spreadsheet
+                                                      s/d/<docid>
+
+
+
+
+                                                  Visiting the endpoint
+                                                  appended a Google
+                                                   access token and
+                                                 allowed me to access
+                                                     the document
+Easy Wins : 8K Blind SQL Injection
+
+
+ Used “gau” tool to obtain                       Found endpoint
+         URLs                        /unsubscribe.php?e=test@example.com
+
+
+
+
+                                               Tried ‘ in the “e”
+                                            parameter, returned an
+                                                 empty page
+
+
+                                             Tried “sleep” payload,
+                                               SQL injection was
+                                                   confirmed
+Easy Wins : Reflected XSS
+
+    Found an end point
+                                                  Tried
+ /iam/redirect-form?meth
+                            /iam/redirect-form?method=GET&action=javas
+ od=POST&action=/iam/
+                                              cript:alert(1);
+            otp
+Uber XSS
+
+                                                           SAML sends a
+    Internal domains                                      “SAMLRequest”
+                            Most applications are
+      redirecting to                                   parameter revealing a
+                           configured to use SAML
+      onelogin.com                                    new directory related to
+                                                        SAML on the target
+
+
+
+
+ The discovered endpoint     Discovered logout
+                                                      Brute forced endpoints
+    was vulnerable to a    endpoint, that redirects
+                                                       under that directory
+   straight forward XSS     to another endpoint
+Uber XSS Continued
+
+
+ Created a script to find if    Found other domains
+ the endpoint is on other      vulnerable to the same
+        domains                         XSS
+
+
+
+
+                                Discovered more IPs
+                                                        Searching for the same
+                               vulnerable to the same
+                                                           endpoint on IPs
+                                        XSS
+A Duplicate Command Injection
+
+                                       Deployed the VM, it
+                                                                          Modified the file system
+   The target was an                    didn’t provide a
+                                                                          to execute bash on log
+   appliance (ova file)              command prompt when
+                                                                                     in
+                                           you log in
+
+
+   Found an end point
+   send-test-email?to=               Performed manual code
+ Where the to parameter                                                   Found .php source code
+                                      review on the source
+    was passed as a
+ command line argument
+
+
+  The developer trusted the input because it was passed through this function, the function
+                             makes sure a valid email is provided
+                         filter_var($to, FILTER_VALIDATE_EMAIL)
+Duplicate Command Injection - Continued
+
+
+            However, the following is considered a valid email address:
+
+                     /send-test-email?to=id|id@example.com
+
+                 Also, this payload works and allow more flexibility
+
+    /send-test-email?to=id|`echo${IFS}testing|tee${IFS}/tmp/hack`@example.com
+
+
+
+
+                                     Duplicate
+ Abusing filters to infiltrate data
+
+
+     Found an API endpoint that accepts a filter like the                 Tried a non-existing key
+                        following                                     /v3/merchants/<id>/employees
+    /v3/merchants/<id>/employees?filter=name%3Dfady                     ?filter=something%3Dfady
+
+
+                             This means you can try something
+                                           like
+ You can also use like
+                           /v3/merchants/<id>/employees?filter=      The application displayed an error
+instead of “=” to make
+                                      pin%3D1111                      with a list of all available keys!
+it easier to extract the
+                                                                          One of them was “pin”
+          data
+                             This will list all the employees with
+                                          pin code 1111
+Binary Example : 11k netconsd Heap Overflow
+
+
+                                                                     Started the source code
+             Downloaded netconsd source code
+                                                                             analysis
+
+
+
+
+Created the first fuzz           The folder contained a library
+                                                                  Found a folder named “libncrx”
+      harness                      to parse ncrx messages
+
+
+
+
+    No crashes                Modified fuzz harness
+Binary Example : 2.5k Spark AR RCE
+
+                                    Analysis of how the files are
+           Found that
+                                     extracted lead to a cache          Tested for zipslip (zip path
+       .arprojpkg files are
+                                     folder in the user’s home           traversal) and it worked
+             zip files
+                                              directory
+
+   More research uncovered
+    that yarnrc have a field            Found that SparkAR spwans
+                                                                             Started looking for
+  named yarnPath where you              a nodejs process and tries to
+                                                                        interesting files to overwrite
+ can provide the path js file to              read .yarnrc file
+              run
+
+
+  Created a zip file with path
+ traversal that writes both the
+  .yarnrc file and the js file to
+          be executed
+Q&A
+

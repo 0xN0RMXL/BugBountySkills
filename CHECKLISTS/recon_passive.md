@@ -1,0 +1,19 @@
+# Checklist: Passive Recon
+- [ ] crt.sh / certspotter for SAN harvesting
+- [ ] subfinder, assetfinder, amass enum -passive
+- [ ] chaos-client (ProjectDiscovery)
+- [ ] github-subdomains, github-search dorks
+- [ ] gau / waybackurls / hakrawler historical URLs
+- [ ] Shodan / Censys / FOFA per ASN, org, hostname pattern
+- [ ] DNSDB historical records
+- [ ] Wayback machine for old endpoints, .git, .env disclosures
+- [ ] Cloud bucket enum (cloud_enum, GrayhatWarfare)
+- [ ] BGP / ASN enum (whois, asnlookup, hurricane electric)
+- [ ] WHOIS reverse lookups (registrant org)
+- [ ] ZoomEye for IoT / weird services
+- [ ] DNSdumpster for visualization
+- [ ] securitytrails for historical data
+- [ ] OSINT: LinkedIn for tech stack, employees → email format
+- [ ] Stack Overflow for company-specific questions exposing internals
+- [ ] Pastebin / GitHub gist for leaks
+- [ ] Trello, JIRA, Confluence public pages (often misconfigured)

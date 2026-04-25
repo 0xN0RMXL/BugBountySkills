@@ -1,0 +1,16 @@
+# Checklist: AWS Misconfig
+- [ ] S3 bucket policy: public read/write/list
+- [ ] Bucket ACL allows AllUsers / AuthenticatedUsers
+- [ ] EC2 IMDSv1 still enabled (downgrade attack via SSRF)
+- [ ] IAM: MFA not enforced, root keys exist, * actions in policies
+- [ ] IAM credentials report — last-used, key-rotation
+- [ ] Security groups with 0.0.0.0/0 on SSH/RDP/DB
+- [ ] Public RDS endpoint (publicly_accessible=true)
+- [ ] Lambda function URL public + IAM role overpermissioned
+- [ ] CloudTrail not enabled / not multi-region
+- [ ] GuardDuty not enabled
+- [ ] EBS snapshots / AMIs publicly shared
+- [ ] SNS / SQS topics publicly accessible
+- [ ] CloudFront with insecure origin (HTTP)
+- [ ] ECR public registry leaking images
+- [ ] Secrets Manager / SSM Parameter Store with public read

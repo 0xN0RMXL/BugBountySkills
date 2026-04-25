@@ -1,0 +1,946 @@
+Bypassing Cloudflare WAF in Bug Bounty
+Programs
+
+1. Introduction: Understanding Cloudflare WAF and the Importance of
+Bypasses in Bug Bounty Programs
+
+
+Web application security is a fundamental pillar in the contemporary digital landscape. With
+the increasing complexity of cyberattacks, Web Application Firewalls (WAFs) have become an
+indispensable first line of defense. Cloudflare WAF stands out as one of the most prominent of
+these solutions, offering comprehensive protection for millions of websites and applications
+worldwide. However, the effectiveness of these solutions does not mean they are entirely
+impenetrable; attackers, especially Bug Bounty Hunters, constantly seek ways to bypass these
+defenses.
+Overview of Cloudflare WAF and its Role in Web Application Protection
+Cloudflare WAF acts as a vital shield positioned between a web application and the Internet.
+Its primary mission is to inspect incoming web and API requests and filter out unwanted traffic
+based on sets of rules known as "rulesets".1 This firewall provides immediate protection for
+web applications by analyzing incoming traffic and determining whether it is malicious or
+not.3Cloudflare WAF is an integral part of Cloudflare's vast global network, which is capable of
+processing immense volumes of HTTP requests, reaching up to 106 million requests per
+second during peak times.3 This global architecture enables Cloudflare to leverage global
+threat intelligence, which is continuously refined by analyzing two trillion requests daily,
+providing unparalleled protection against the latest attacks, including zero-day exploits and
+emerging threats.3Cloudflare WAF's main functions include "Detection" of malicious activities
+and "Mitigation" of them. In terms of detection, the WAF identifies malicious or potentially
+malicious activities through advanced mechanisms such as "WAF Attack Score," which
+evaluates traffic based on its likelihood of being malicious, and "Bot Score," which determines
+whether traffic originates from a bot or a human.2 As for mitigation, the WAF blocks suspicious
+requests, challenges them (e.g., by displaying a CAPTCHA test), or throttles them via features
+like custom rules, managed rules, and rate limiting rules.2Cloudflare WAF aims to protect
+applications from a wide range of common attacks, including OWASP Top 10 threats like SQL
+injection and Cross-Site Scripting (XSS), in addition to preventing credential stuffing attempts
+by detecting leaked credentials, and identifying malware in uploaded files.3 It also offers
+unmetered DDoS Protection, ensuring the continuous availability of applications.3
+The Importance of Discovering WAF Bypasses in the Context of Bug Bounty Programs
+Despite the critical role of Web Application Firewalls (WAFs) as security gateways that inspect
+incoming HTTP traffic to filter out malicious requests and provide defenses against a variety
+of web-based threats, they are not immune to evasion.10 Evading WAFs can compromise these
+defenses, potentially causing significant harm to Internet users.10A successful WAF bypass in
+bug bounty programs is considered a critical security finding because it allows malicious
+payloads to reach the underlying web application undetected or unblocked, which can lead to
+severe consequences.11 These consequences include data breaches, unauthorized system
+access, Denial of Service (DoS) attacks, website defacement, and malware injection.11WAF
+bypasses are often highly valued in bug bounty programs, as they expose fundamental
+weaknesses in the application that the WAF was supposed to protect.13 Several published Bug
+Bounty reports highlight Cloudflare WAF bypasses as serious security issues, especially when
+the original server IP address is exposed.13 However, bug bounty program policies vary in this
+regard; while some programs (like Tesla's program) may consider WAF bypasses out of scope
+if they do not lead to direct exploitation 17, other programs (like Imperva's program) explicitly
+encourage WAF bypass testing.14 This variation underscores the importance of understanding
+each program's requirements to determine what constitutes a "reportable WAF bypass."
+Why WAFs Remain Vulnerable to Bypass Despite Their Evolution
+Despite continuous advancements in WAF technologies, they remain vulnerable to bypass for
+several fundamental reasons. Many WAFs, especially those relying on a Negative Security
+Model, depend on signatures to block known threats.7 This makes them ineffective against
+zero-day attacks and novel payloads that do not match existing signatures.7 Attackers
+constantly develop new evasion techniques, making it a continuous arms race.12Limitations in
+request inspection contribute to vulnerabilities that attackers can exploit. For example, some
+WAFs may only inspect a portion of the bytes in an HTTP request, allowing attackers to pad
+their payloads with additional data to bypass inspection.18 Many WAFs also struggle to inspect
+encrypted traffic (e.g., HTTPS) without enabling deep packet inspection.18 Additionally, WAFs
+often lack the necessary context to understand how data is used by the application, making
+them susceptible to attacks that exploit logical flaws within the application
+itself.11Misconfigurations and logical gaps in WAF policies are significant factors contributing
+to vulnerabilities.12 Incorrectly configured rules or exceptions can inadvertently open
+pathways for attackers. The need to balance security with user experience often leads to less
+stringent rules to minimize false positives, creating opportunities for bypass.20One of the
+more sophisticated reasons for successful bypasses is the exploitation of parsing
+discrepancies between the WAF and the web application.10 The WAF might interpret an HTTP
+request differently from how the backend application interprets it, allowing a malicious
+payload to pass through the WAF's filters but be correctly parsed and executed by the
+application. This approach is more complex than simple obfuscation techniques.
+Section 1 Insights: In-depth Analysis
+    1.​ WAF as a Defense Layer, Not a Silver Bullet: Cloudflare WAF, despite being described
+        as a "shield" 2 and a "cornerstone" 4 of security, is not a magical solution guaranteeing
+        absolute protection. Numerous analyses highlight its "limitations" 7 and state that it is
+        "not immune".11 The fact that bug bounty programs explicitly seek WAF bypasses 14
+        confirms this contradiction. Furthermore, it is mentioned that WAF "should not be relied
+        upon as the sole means" of protection 7 and that it "does not solve the underlying
+        problem".22 This indicates that WAF, despite its power, is merely one layer within a
+        multi-layered defense-in-depth strategy. Bypassing it does not necessarily fix the
+        underlying application vulnerability but rather exposes a weakness in the outer
+        protection layer. This highlights that a WAF bypass is a crucial finding because it
+        uncovers latent vulnerabilities that the WAF was temporarily attempting to conceal. Bug
+        bounty hunters should focus on these inherent limitations and the dynamic nature of
+      attacks rather than solely relying on known signatures. This means looking for
+      misconfigurations, parsing discrepancies, and logical flaws that the WAF cannot "see"
+      or understand in the same way the backend application does.
+  2.​ The Arms Race Between Evolving Attacks and WAF Updates: Available resources
+      indicate that Cloudflare WAF regularly updates its rules to protect against "known
+      threats" and "zero-day vulnerabilities".1 However, it is also noted that attackers
+      "constantly develop evasion techniques" 12 and that "human speed becomes a limiting
+      factor" in updating Cloudflare's rules.5 This demonstrates a continuous dynamic where
+      WAFs strive to catch up with new attack methods. The introduction of ML-based
+      detection 3 is a direct response to this challenge, aiming to detect "evasion and new
+      attack techniques before they are publicly known".5 This underscores that web
+      application security is an ongoing arms race. Despite advancements in ML-powered
+      WAFs, attackers' ability to find new bypass methods (especially through parsing
+      discrepancies or logical flaws) means that continuous innovation from WAF vendors is
+      imperative. It also suggests that Bug Bounty programs remain essential for discovering
+      these novel vulnerabilities that even the most sophisticated detection systems might
+      miss. Bug bounty hunters need to evolve their methodologies beyond basic encoding.
+      Advanced techniques involve understanding how different components in the request
+      path (WAF, proxy, application server) interpret the same HTTP request differently, or
+      how to exploit the WAF's limited visibility into application logic. This requires a deeper
+      understanding of HTTP protocol nuances and backend application behavior.
+
+2. Cloudflare WAF Mechanism and Advanced Features
+
+
+Cloudflare WAF operates as an integral part of the Cloudflare global network, offering a wide
+array of features designed to protect web applications and APIs from evolving threats. The
+WAF's operation is best understood by examining its different rule types and the advanced
+detection mechanisms it employs.
+Managed Rules and Custom Rules
+Cloudflare WAF relies on robust rulesets to filter traffic and determine if it is malicious. These
+rules are primarily divided into two types:
+   ●​ Managed Rules:
+         ○​ These are pre-configured rules created by the Cloudflare security team, providing
+             immediate and effective protection against known security vulnerabilities, such as
+             those listed in the OWASP Top 10, as well as the ability to counter zero-day
+             exploits.2
+         ○​ These rules are regularly updated to ensure coverage of new vulnerabilities and
+             reduce false positives, guaranteeing continuous protection with minimal
+             disruption.1
+         ○​ These sets include the Cloudflare Managed Ruleset, the Cloudflare OWASP Core
+             Ruleset (Cloudflare's implementation of the OWASP ModSecurity Core Rule Set),
+             Cloudflare Exposed Credentials Check rules that verify credentials against public
+             leaked databases, and Cloudflare Sensitive Data Detection rules that monitor for
+             personal or financial information leakage.23
+         ○​ Users can modify the behavior of specific rules within these sets or create
+             exceptions to handle false positives, providing configuration flexibility.1
+   ●​ Custom Rules:
+         ○​ These rules give users precise control over incoming traffic by filtering requests
+             based on specific expressions using Cloudflare's Rules language.1
+         ○​ Custom rules can take various actions when a request matches the defined
+             criteria, such as "Block" for malicious requests, "Managed Challenge" to present
+             interactive tests (like CAPTCHA), "JS Challenge," "Log" to monitor traffic without
+             blocking it, or "Skip" to dynamically disable Cloudflare security features for a
+             specific request.4
+         ○​ Custom rules are evaluated in a specific order, and some actions like "Block" stop
+             the evaluation of other rules, affecting the request processing flow.2
+         ○​ The ability to create custom rules and support for Regular Expressions (Regex)
+             varies based on the Cloudflare plan (Free, Pro, Business, Enterprise), with
+             higher-tier plans offering more flexibility and capabilities.24
+   ●​ Rate Limiting Rules:
+         ○​ These rules are used to define limits for the rate of incoming requests that match
+             a specific expression, and to specify the action to take when these limits are
+             reached. This feature is crucial in stopping Denial of Service (DDoS) attacks and
+             Brute-force attempts targeting applications and APIs.1
+Advanced Detection Mechanisms
+In addition to rules, Cloudflare WAF uses advanced detection mechanisms to identify threats:
+   ●​ Attack Score:
+         ○​ This feature evaluates traffic on a scale from 1 (likely to be malicious) to 99
+             (unlikely to be malicious). It checks for known attack variations and malicious
+             payloads.1
+         ○​ This system is machine learning-based, trained on real positive samples observed
+             across Cloudflare's vast network, allowing it to detect new evasion, bypass, and
+             attack techniques even before they become publicly known.5
+   ●​ Bot Score:
+         ○​ This feature evaluates traffic on a scale from 1 (likely to be a bot) to 99 (likely to be
+             human).1 Cloudflare relies on a variety of signals, including data collected from
+             Project Honey Pot, to improve the accuracy of bot detection.27
+   ●​ Leaked Credentials:
+         ○​ This feature scans incoming requests for credentials (usernames and passwords)
+             previously leaked from known data breaches, helping to prevent account takeover
+             attempts.1
+   ●​ Malicious Uploads:
+         ○​ This feature inspects content objects, such as uploaded files, for malicious
+              signatures like malware, protecting servers from malware infection.1
+   ●​ Firewall for AI Beta:
+         ○​ A new feature that helps protect services powered by Large Language Models
+              (LLMs) from abuse and AI-specific attacks.1
+These detection mechanisms enrich incoming requests with rich metadata, which is available
+in the "Security Analytics" and "Security Events" dashboards. Users can analyze this data to
+better understand their security posture and determine the most appropriate mitigation rules.1
+Cloudflare WAF Architecture and its Role as a Reverse Proxy
+Cloudflare WAF operates on the Cloudflare global network, sitting in front of web applications
+as a Reverse Proxy.3 This means it intercepts all incoming requests before they reach the
+Origin Server, inspecting them against its rule engine and global threat intelligence. After
+inspection, legitimate requests are routed to their intended destination, while suspicious
+requests are blocked, challenged, or logged.3This architecture offers several benefits,
+including leveraging global threat intelligence gathered from millions of websites, machine
+learning-based detection that addresses emerging threats in real-time, and rapid deployment
+and easy management without the need to deploy any on-premise hardware or software.3
+Comparison of Cloudflare WAF's Main Rule Types and Their Features
+The following table provides a brief comparison of Cloudflare WAF's main rule types, helping
+to understand how each works and its value in a defense strategy. Understanding these
+differences is crucial for bug bounty hunters, as it allows them to identify potential
+weaknesses in each layer of WAF protection. For example, knowing that managed rules rely on
+signatures immediately points to obfuscation techniques as a potential bypass method, while
+the flexibility of custom rules might suggest misconfiguration as an attack vector.
+
+Rule Type    Description/Pu Key Features Configuration Actions                Availability
+             rpose                                                            (Plan)
+Managed      Pre-configured OWASP Top 10 Dashboard,          Block,           All plans
+Rules        ,               protection,     API, Terraform. Challenge,       (additional
+             signature-base Zero-day                         Log, Create      features for
+             d protection    protection,                     exceptions.      Enterprise).
+             against known regular
+             and Zero-day updates,
+             threats.        leaked
+                             credential
+                             checks,
+                             sensitive data
+                             detection.
+Custom Rules User-defined Filtering based Dashboard,         Block,           Free (5), Pro
+             logic for       on IP, country, API, Terraform. Managed          (20), Business
+             precise control URL, request                    Challenge, JS    (100),
+             over incoming headers, attack                   Challenge,       Enterprise
+             traffic based score, bot                        Log, Skip.       (1000).
+             on specific     score. Regex
+                expressions.   support (for
+                               higher plans).
+Rate Limiting Defines limits   Rate limiting  Dashboard,      Block,              All plans
+Rules            for incoming  based on IP,   API, Terraform. Challenge, JS       (advanced
+                 request rates header, ASN,                   Challenge,          features for
+                 to prevent    country.                       Log.                Enterprise).
+                 DDoS and
+                 brute-force
+                 attacks.
+Section 2 Insights: In-depth Analysis
+  1.​ Cloudflare's Multi-layered Defense and Potential Bypass Vectors: Cloudflare WAF
+      does not represent a single, monolithic defense; rather, it is a combination of
+      signature-based managed rules that are frequently updated 2, user-defined custom
+      rules that offer significant flexibility 24, and advanced detection mechanisms such as
+      ML-powered attack scores 2 and bot scores.27 The rule execution order 2 and the "Skip"
+      action 25 are crucial to how requests are processed. This layering, while increasing
+      defensive strength, also introduces multiple potential points of failure or bypass. A
+      bypass may not necessarily defeat all layers but might slip through a specific rule type
+      or a misconfigured "Skip" action. For instance, a sophisticated attack might bypass a
+      signature-based managed rule but be detected by the ML model (attack score), or vice
+      versa if the ML model is not perfectly tuned. Therefore, bug bounty hunters should
+      adopt a multi-layered testing approach, attempting to bypass specific rule types or
+      detection mechanisms. For example, if a simple XSS payload is blocked by managed
+      rules, obfuscation should be attempted. If that fails, it should be checked whether the
+      WAF's ML model (attack score) was triggered. Misconfigurations in "Skip" actions
+      should also be sought, as an administrator might have inadvertently created an
+      exception that allows malicious traffic.
+  2.​ Limitations of "Human Speed" in WAF Defense: While Cloudflare prides itself on
+      rapid rule activation and machine learning to address unknown vulnerabilities 4, one
+      source acknowledges that "human speed becomes a limiting factor" in updating
+      Cloudflare's managed rules.5 This implies that whenever a new attack vector is
+      discovered, a "window of opportunity" becomes available for attackers to bypass
+      mitigations before rules are fully updated. The Log4j RCE attack is cited as an example
+      where frequent rule updates were necessary due to the discovery of new bypasses
+      resulting from changes in known attack patterns.5 This is a critical observation for bug
+      bounty hunters. It means that newly discovered vulnerabilities (especially Zero-days or
+      N-days) are prime targets for WAF bypasses, as WAF rules may not have fully adapted
+      to all bypass variations. Researchers should closely monitor vulnerability disclosures
+      and test for bypasses quickly before WAF vendors can fully update their rulesets.
+      Although the ML-powered attack scoring system is designed to mitigate this, it is not
+      foolproof, as evidenced by the need for continuous rule updates for Log4j.
+3. Common Cloudflare WAF Bypass Techniques
+
+
+Bypassing Web Application Firewalls (WAFs) is an art that requires a deep understanding of
+how these defenses work and their potential weaknesses. Despite the evolution of Cloudflare
+WAF, there are several techniques that attackers and bug bounty hunters can use to bypass it.
+Payload Encoding & Obfuscation
+      These techniques aim to alter the representation of the attack payload to make it harder
+      for the WAF to detect malicious patterns, while ensuring the payload remains
+      executable by the web application.8 Common techniques include:
+  ●​ Hex encoding: Replacing characters with their hexadecimal equivalent. For example,
+      SELECT can be encoded as %53%45%4C%45%43%54.8 If the WAF does not correctly
+      decode the payload, it might miss the attack.
+  ●​ Base64 encoding: Converting the entire payload into a Base64 string.8
+  ●​ URL encoding: Encoding certain characters as %xx, where xx is the hexadecimal
+      representation of the character.8 Double encoding (e.g., using %25 instead of %) can
+      bypass poorly designed filters that lack recursion in the decoding process.28
+  ●​ Unicode encoding: Using Unicode alternatives for ASCII characters (e.g., \u0070 for p
+      in prompt()).28 This can trick WAFs that do not fully process Unicode characters.
+  ●​ HTML encoding: Encoding special characters into HTML entities (e.g., " for ").28
+  ●​ Case Transformation: Changing the case of characters in the payload (e.g., SeLeCt
+      instead of SELECT) to bypass case-sensitive pattern matching in less sophisticated
+      WAFs.8
+  ●​ Using Comments: Inserting comments (/**/, /*!--*/) into attack strings to break patterns
+      that the WAF looks for.28 In databases like MySQL, the /*! */ syntax can be used for
+      conditional comments that are executed by the database but might be ignored by the
+      WAF.28
+  ●​ Junk Characters/Padding: Inserting random or meaningless characters (+-+-1-+-+) or
+      padding payloads with extra characters. This technique exploits the fact that some
+      WAFs may only inspect a portion of the bytes in a request.18
+  ●​ Line Breaks/Newlines/Tabs: Inserting line breaks (%0A) or tabs (%09) to obfuscate
+      payloads and break patterns that the WAF looks for.28
+  ●​ Encrypted Payloads: WAFs often struggle to inspect encrypted traffic (e.g.,
+      HTTPS/TLS) without enabling deep packet inspection, allowing attacks to slip through
+      encrypted communication channels.18
+Parsing Discrepancies
+      These techniques are more sophisticated, exploiting inconsistencies in how WAFs and
+      web application frameworks interpret HTTP requests. This allows malicious payloads to
+      pass through the WAF but be correctly parsed and executed by the application.10
+  ●​ HTTP Parameter Pollution (HPP): Involves sending multiple parameters with the same
+      name in a single request. The WAF might only inspect the first parameter, while the
+      server processes a subsequent parameter value containing the malicious payload.8
+  ●​ HTTP Parameter Fragmentation (HPF): Splitting the malicious payload across multiple
+     parameters, making it difficult for the WAF to reassemble and detect the full payload.30
+  ●​ JSON and XML Payloads: Many modern web applications use REST APIs and SOAP
+     services that transmit data in JSON or XML formats. Historically, many WAFs, including
+     Cloudflare, did not fully or correctly inspect JSON or XML content, allowing malicious
+     code injection within these formats.8 Although Cloudflare has recently added JSON
+     support, these vulnerabilities were common.33
+  ●​ Content-Type Manipulation: Changing or removing the Content-Type header to trick
+     WAFs into not decoding/evaluating requests based on known content types. For
+     example, a WAF might not inspect the payload if the content type is unexpected.34
+     Research shows bypasses across Cloudflare for multipart, json, xml content types.10
+  ●​ Null Byte Injection (%00 or 0x00): Exploits how different programming languages
+     and systems handle null bytes, causing premature string termination and bypassing
+     input validation checks.35 This technique can be used to manipulate file paths and
+     bypass file extension checks in file upload scenarios.35
+Exploiting Logical Flaws and WAF Misconfigurations
+     WAFs primarily analyze request content and lack the full context of application logic,
+     making them vulnerable to attacks that exploit business logic flaws.11 Misconfigurations
+     are also a common cause of bypasses, even in advanced WAF systems.12
+  ●​ Session Awareness Bypassing: Exploits stateless WAFs that process each request
+     independently. Attackers can spread an attack across multiple requests, where
+     innocuous payloads are sent first, followed by the malicious payload that exploits a
+     vulnerability not detected in the context of a single request.8
+  ●​ Exploiting Application Logic Flaws: WAFs may not understand how data is processed
+     during deserialization, allowing attacks to slip through.19 This includes issues like Broken
+     Access Control where attackers can exploit weaknesses in application logic to bypass
+     access restrictions.18
+  ●​ Misconfigured Rules/Exceptions: Administrators can inadvertently create exceptions
+     or rules that allow malicious traffic. For example, a "Skip" rule in Cloudflare WAF might
+     be configured too loosely, unintentionally disabling security features for certain
+     requests.25
+  ●​ Zero-Day Exploits: WAFs are ineffective against new and unknown vulnerabilities until
+     their signatures are added to the WAF database.7 Although Cloudflare uses machine
+     learning to address this challenge, it is a continuous race between attackers and
+     defenders.5
+Direct Access to Origin Server (Origin IP Exposure)
+     Cloudflare acts as a reverse proxy, meaning it hides the Origin Server's IP address
+     behind its network. If the original IP address is exposed, attackers can bypass
+     Cloudflare WAF entirely by sending requests directly to the server, thereby
+     circumventing all layers of protection provided by Cloudflare.8
+  ●​ Methods for Origin IP Detection:
+        ○​ Historical DNS Records: Analyzing old DNS records for the site, which might
+            reveal the original IP address before the site was placed behind Cloudflare.27
+         ○​ Email Headers: Extracting server IP addresses from email headers sent by the
+            application.27
+         ○​ Content/Favicon Search: Searching for unique content or favicons associated
+            with the original IP address.37
+         ○​ Misconfigured DNS/Subdomains: If CNAME records are not configured
+            correctly, or if subdomains point directly to the origin server instead of
+            Cloudflare.15
+         ○​ Server Information Leakage: Error messages, misconfigured services, or
+            internal network leaks might reveal the original IP address.
+   ●​ Impact: This bypass allows attackers to send unfiltered payloads directly to the server,
+      bypassing all common Cloudflare protections, enabling them to perform Denial of
+      Service (DoS) attacks and retrieve sensitive data.13
+Header Manipulation
+Header manipulation involves modifying HTTP headers to trick the WAF or application into
+processing requests differently or bypassing security checks.
+   ●​ X-Originating-IP, X-Forwarded-For, X-Remote-IP, X-Remote-Addr Headers: Setting
+      these headers to 127.0.0.1 (localhost) or other internal IP addresses can bypass WAFs
+      configured to trust themselves or upstream proxies.34 This exploits excessive trust in
+      headers that can be forged.
+   ●​ Content-Type Header: Changing or removing this header. Some WAFs may only
+      decode or evaluate requests based on known content types, allowing bypass if an
+      unexpected content type is used.34 Research shows bypasses across Cloudflare for
+      multipart, json, xml content types.10
+   ●​ Host Header: Modifying the Host header to bypass poorly configured WAFs that rely on
+      the correct Fully Qualified Domain Name (FQDN) of the site.34
+   ●​ x-middleware-subrequest Header: A critical vulnerability in Next.js applications
+      (CVE-2025-29927) revealed that manipulating this header could bypass authentication,
+      authorization, and rate limiting systems.38 While not a direct WAF bypass, it highlights
+      how header manipulation can bypass security controls behind the WAF. WAFs can be
+      configured to block this header.38
+   ●​ User-Agent/Referer Headers: Spoofing the User-Agent header to mimic legitimate
+      browsers or the Referer header to appear as if the request is coming from a trusted
+      source, to bypass bot detection or filtering rules based on these headers.27
+IP Fragmentation and Other Techniques
+   ●​ IP Fragmentation: Involves splitting the payload into multiple smaller IP fragments to
+      bypass WAFs that fail to reassemble packets completely before inspection.8
+   ●​ H2c Smuggling: A lesser-known technique capable of bypassing WAF restrictions.21
+   ●​ Large Request Bodies: WAFs typically ignore data exceeding a configurable maximum
+      body size. This can be exploited for POST, PUT, and PATCH requests. For example,
+      Cloudflare Enterprise has a 128 KB body size limit for managed rulesets.21
+Summary of WAF Bypass Techniques with Brief Examples
+The following table summarizes common WAF bypass techniques, with brief practical
+examples, reasons for their effectiveness, and their sources. This table aims to provide a quick
+and practical reference for bug bounty hunters and security practitioners.
+Bypass          Technique       Brief           Practical       Reason for        Source
+Category                        Description     Example         Effectiveness /
+                                                                Exploited WAF
+                                                                Weakness
+Payload         URL Encoding Changing           SELECT          WAF does not 8
+Encoding &                      characters to becomes           correctly
+Obfuscation                     their           %53%45%4C% decode
+                                percent-encod 45%43%54          payload or
+                                ed                              does not apply
+                                representation.                 rules after
+                                                                decoding.
+                Case            Changing the SELECT             WAF relies on 8
+                Transformation case of          becomes         case-sensitive
+                                characters in SeLeCt            pattern
+                                the payload.                    matching.
+                Using           Inserting       uni/**/on       WAF does not 28
+                Comments        comments into sel/**/ect        recognize the
+                                the payload to                  payload due to
+                                break patterns.                 comments,
+                                                                while the
+                                                                application still
+                                                                processes it.
+                Payload         Adding random payload+-+-1- WAF inspects 18
+                Padding         or meaningless +-+              only a portion
+                                characters.                     of the payload
+                                                                or does not
+                                                                process excess
+                                                                characters.
+Parsing         HTTP            Sending         ?id=1&id=malic WAF inspects 8
+Discrepancies Parameter         multiple        ious            only the first
+                Pollution (HPP) parameters                      parameter,
+                                with the same                   while the
+                                name.                           server
+                                                                processes the
+                                                                second.
+                JSON/XML        Injecting       {"user":"admin WAF does not 8
+                Payloads        malicious code ",               deeply inspect
+                                within JSON or "pass":"<script JSON/XML
+                                XML formats.  >alert('XSS')</s content.
+                                              cript>"}
+              Null Byte       Inserting %00 file.jpg%00.ph Exploiting how 35
+              Injection (%00) to prematurely p                  different
+                              terminate a                       systems handle
+                              string.                           null bytes in
+                                                                string
+                                                                processing.
+Exploiting    Session         Spreading the Request 1: GET Stateless WAF 8
+Logical Flaws Awareness       attack across /login, Request processes
+& WAF         Bypassing       multiple        2: POST /login each request
+Misconfigurat                 requests in a (valid              independently.
+ions                          single session. credentials),
+                                              Request 3:
+                                              POST
+                                              /profile?id=1';D
+                                              ROP TABLE
+                                              users;--
+                                                                                25
+              Misconfigured Loosely           Skip rule allows Human
+              Rules/Exceptio configuring a User-Agent:          misconfiguratio
+              ns              "Skip" rule.    evil to pass      n leads to
+                                                                unintended
+                                                                disabling of
+                                                                protection.
+                                                                                13
+Direct Origin Origin IP       Identifying and http://192.168.1. Failure to
+Server Access Exposure        directly        1/login instead conceal the
+                              accessing the of                  origin IP,
+                              origin server's http://example. allowing
+                              IP address.     com/login         complete
+                                                                Cloudflare
+                                                                bypass.
+                                                                                34
+Header        Spoofing        Setting         X-Forwarded-F WAF or
+Manipulation X-Forwarded-F X-Forwarded-F or: 127.0.0.1          application
+              or              or header to                      trusts this
+                              127.0.0.1.                        header and
+                                                                considers the
+                                                                request from a
+                                                                trusted source.
+              Content-Type Changing           Content-Type: WAF does not 10
+              Manipulation content type to application/xml perform deep
+                              application/xml                   inspection for
+                              or                                certain content
+                                multipart/form-                  types.
+                                data.
+
+
+Section 3 Insights: In-depth Analysis
+  1.​ The Vulnerability of "Normalization" and "Parsing Discrepancies": Available
+      resources frequently highlight that "parsing discrepancies" and "vulnerabilities in WAF
+      request normalization functions" are among the most significant causes of bypasses.10
+      The core idea here is that the WAF and the backend application might interpret the
+      same HTTP request differently after normalization or parsing. For example, the WAF
+      might remove certain characters or decode part of the payload in one way, while the
+      application decodes or processes it differently, allowing a malicious payload to pass
+      through the WAF's filters but be correctly processed by the application. This approach
+      is more complex than simple obfuscation, as it aims not just to hide the payload but to
+      exploit the difference in "understanding" the request between the WAF and the
+      application. JSON/XML payloads 8 and content-type manipulation 34 are specific
+      examples of this type of bypass. Therefore, bug bounty hunters should focus on how
+      WAFs normalize, decode, and parse incoming requests compared to how the target
+      application does so. This means experimenting with different Content-Type headers,
+      various encodings (especially nested or mixed ones), and parameters (HTTP Parameter
+      Pollution, HTTP Parameter Fragmentation) to identify where this discrepancy lies.
+      Specialized tools like the "Bypass WAF" Burp Suite extension 34 and SQLMap's tamper
+      scripts 30 are designed to exploit these nuances.
+  2.​ Misconfiguration as a Key Bypass Vector, Even for Advanced WAFs: Although
+      Cloudflare WAF boasts advanced features like an ML-powered attack scoring system 2,
+      many resources point to "misconfigured policies" 12 and "poorly configured WAFs" 34 as
+      major enablers of bypasses. The example of origin IP exposure 13 is a direct result of
+      misconfiguration (e.g., not properly hiding the origin IP). The "Skip" action in Cloudflare
+      WAF 25 also presents a misconfiguration risk if not used carefully, as an administrator
+      could inadvertently create an exception that allows malicious traffic. This suggests that
+      even the most sophisticated WAF can be rendered ineffective by human error in
+      configuration. Therefore, bug bounty hunters should not assume perfect WAF
+      configuration. They should actively look for configuration weaknesses, such as exposed
+      origin IPs, overly permissive "Skip" rules, or WAFs that trust certain headers (like​
+      X-Forwarded-For) without proper validation. This often involves reconnaissance beyond
+      just the web application, looking into DNS records, email headers, and network
+      infrastructure.
+
+4. Practical Aspects and Tools Used in WAF Bypass
+
+
+Bypassing Cloudflare WAF in bug bounty programs requires a combination of deep technical
+knowledge, creativity, and the use of appropriate tools. Tools are an integral part of the
+penetration testing process, enabling researchers to automate complex tasks, experiment
+with multiple bypass techniques, and efficiently analyze responses.
+Penetration Testing Tools
+A suite of tools is essential for any researcher aiming to bypass WAFs:
+  ●​ Burp Suite: Considered "the world's #1 web penetration testing toolkit."34 It is an
+      indispensable tool for intercepting, inspecting, modifying, and replaying HTTP requests.
+         ○​ Burp Intruder: This component is used for launching custom fuzzing attacks and
+             high-speed payload delivery, allowing for experimentation with a large number of
+             payload variations to discover vulnerabilities.8
+         ○​ BApp Store Extensions: These extensions offer powerful additional
+             functionalities. Specifically, the "Bypass WAF" extension 8 adds headers like
+             X-Originating-IP, X-Forwarded-For, X-Remote-IP, X-Remote-Addr to exploit trust
+             configurations in WAFs or backend applications. It also enables modification of
+             Content-Type and Host headers, and provides options for path and parameter
+             obfuscation, directly targeting WAF weaknesses related to parsing and
+             configuration.34
+         ○​ Other Extensions: Extensions like Turbo Intruder are used for high-speed
+             fuzzing, increasing the efficiency of bypass discovery.8
+  ●​ SQLMap: A powerful open-source tool used for automating the detection and
+      exploitation of SQL injection vulnerabilities.8
+         ○​ Tamper Scripts: These scripts are SQLMap's key feature in the context of WAF
+             bypass. They modify payloads (e.g., encoding, case transformation, HTTP
+             parameter pollution, fragmentation) to evade WAF rules.8 Examples include
+             space2morehash.py, charencode.py, chardoubleencode.py, and
+             charunicodeencode.py, which exploit various ways to obfuscate or change
+             payload representation to bypass filters.40
+  ●​ OWASP ZAP (Zed Attack Proxy): A free, open-source penetration testing tool
+      specifically designed for web applications.41
+         ○​ It can be configured to automatically test various payloads and attack vectors,
+             and supports custom scripting for WAF bypass scenarios.8
+         ○​ It is effective for fuzzing and evaluating WAF responses to unexpected inputs,
+             helping to identify weaknesses in the inspection process.18
+  ●​ Nmap: A versatile network scanner with powerful Nmap Scripting Engine (NSE) scripts.
+         ○​ http-waf-detect.nse: This script attempts to determine if a web server is
+             protected by a WAF by probing the server with malicious payloads and detecting
+             changes in the response code or body.44
+         ○​ http-waf-fingerprint.nse: This script attempts to identify the type and version of a
+             WAF by sending a number of requests and looking for known behaviors and
+             fingerprints in the responses.45
+        ○​ Nmap can also be used in IP fragmentation scenarios.8
+Fuzzing Techniques for Discovering New Bypasses
+Fuzzing is an effective technique for discovering new WAF bypasses. It involves sending
+unexpected, malformed, or invalid inputs to the application to evaluate the WAF's response.18
+Advanced fuzzing techniques, especially those targeting "parsing discrepancies" in headers
+and body segments (e.g., JSON, multipart/form-data, XML), have led to the discovery of
+numerous bypasses across various WAFs, including Cloudflare.10 Tools like Burp Intruder,
+OWASP ZAP, and Metasploit enable efficient automated fuzzing operations.8
+Using Headless Browsers and CAPTCHA Solutions
+  ●​ Headless Browsers (e.g., Selenium): These browsers are used to automate browser
+      interactions without a graphical user interface. They can simulate human browsing
+      behavior (e.g., scrolling, mouse movements, clicks) to trick Cloudflare's bot detection
+      systems.27 They can also bypass canvas fingerprinting techniques used in bot
+      detection.39
+  ●​ CAPTCHA Solutions: Cloudflare uses CAPTCHA challenges as a mitigation measure
+      when it suspects traffic is robotic.25 Dedicated CAPTCHA solver services or tools can
+      automate the process of solving these challenges, allowing the attack to continue.27 It's
+      worth noting that Cloudflare has removed support for older Privacy Pass v1 tokens 46
+      and now relies on a variety of signals to infer if incoming traffic is automated.46
+The Importance of Proxies and IP Rotation
+  ●​ Proxy Solutions: The use of proxies, especially Residential Proxies, is effective in
+      evading Cloudflare's bot detection. These proxies provide real IP addresses from
+      different geographical locations, making traffic appear legitimate and originating from
+      real users.27
+  ●​ IP Address Rotation: This technique helps combat IP address blocking and avoid
+      suspicion by frequently changing the source IP address for each request or set of
+      requests, making it difficult for the WAF to track malicious activities.27
+  ●​ Bright Data's Web Unlocker: This is an AI-powered solution offered by Bright Data,
+      which uses advanced techniques like browser fingerprinting, CAPTCHA solving, IP
+      rotations, and request retries to bypass anti-bot detections like Cloudflare with high
+      success rates of up to 99.99%.39
+Section 4 Insights: In-depth Analysis
+  1.​ Automation and Integration of Techniques for Effective Bypass: Available resources
+      emphasize that successful WAF bypass often requires not just one technique, but a
+      combination of multiple techniques.8 Tools like Burp Suite, SQLMap, and OWASP ZAP
+      provide powerful features for encoding, fragmentation, header manipulation, and
+      fuzzing.8 The emphasis on "combining multiple techniques" 8 and "fortified headless
+      browsers" with "IP rotation" and "CAPTCHA solving" 39 indicates that a multi-faceted
+      and automated approach is often necessary to penetrate advanced WAFs. Therefore,
+      bug bounty hunters should move beyond single-technique manual testing. They need to
+      master a suite of tools and understand how to chain techniques (e.g., encoding + HTTP
+      parameter pollution + header manipulation) to craft complex payloads that exploit
+      multiple WAF weaknesses simultaneously. Automation frameworks and custom scripting
+      are becoming increasingly important for effectiveness and efficiency in this domain.
+  2.​ The Arms Race in WAF Defense and Bypass: Cloudflare continuously updates its bot
+      detection algorithms, which are now AI-powered 27, and its managed rulesets are
+      regularly updated to address unknown vulnerabilities.23 However, bypass tools and
+      techniques are also evolving, with new weaknesses being discovered constantly.39
+      Cloudflare's mention of removing support for older Privacy Pass v1 tokens 46
+      demonstrates its continuous adaptation to bypass attempts. This is a clear "arms race"
+      where both sides are constantly innovating, meaning what works today might not work
+      tomorrow. Therefore, bug bounty hunters must stay updated on the latest WAF
+      technologies and bypass methods. Relying on outdated techniques will not be effective.
+      Continuous learning, monitoring security research (such as the paper on parsing
+      discrepancies 10), and experimenting with new tool features are essential to stay ahead
+      in the bug bounty game. This also implies that WAF bypasses are not "find-and-forget"
+      vulnerabilities; a bypass discovered today might be patched tomorrow, requiring
+      continuous vigilance.
+
+5. Impact of Cloudflare WAF Bypass in Bug Bounty Programs
+
+
+Bypassing Cloudflare WAF is a discovery of paramount importance in bug bounty programs,
+not only because it exposes a weakness in a critical security layer but also because it often
+enables the exploitation of deeper vulnerabilities in the underlying application. Understanding
+the security risks and consequences of such a bypass, and how to assess its severity and
+report it effectively, is essential for successful bug bounty hunters.
+Security Risks and Consequences of WAF Bypass
+When a WAF is successfully bypassed, applications become exposed to numerous attacks
+that the firewall was supposed to prevent. The main security consequences include:
+  ●​ Data Breaches: This is one of the most serious outcomes, where attackers can gain
+      unauthorized access to and exfiltrate sensitive data, such as personal information,
+      credit card numbers, passwords, and confidential business data. This leads to
+      significant financial losses, reputational damage, and legal liabilities under data
+      protection regulations like GDPR and HIPAA.11
+  ●​ Unauthorized Access and System Compromise: By bypassing the WAF, attackers can
+      gain access to restricted areas of the web application or underlying systems, such as
+      administrative panels, databases, and APIs. They can then modify content, inject
+      malicious scripts, create backdoors for future access, or escalate privileges to gain
+      greater control over the system.11
+  ●​ Denial of Service (DoS) or Distributed Denial of Service (DDoS) Attacks: With the
+      WAF bypassed, attackers can more easily launch DoS or DDoS attacks, overwhelming
+      the web application with massive traffic and making it unavailable to legitimate users.
+      This can disrupt business operations, lead to revenue loss, and damage customer
+      trust.11 WAF bypass can enable attackers to circumvent rate limits enforced by the
+      WAF.12
+  ●​ Website Defacement: An attacker might deface the website by altering its visual
+      appearance or content, often for political, vandalistic, or to undermine trust in the
+      targeted organization. Defacement can significantly harm an organization's image and
+      requires time and resources to restore the original content.11
+  ●​ Malicious Code Injection: Attackers can exploit a WAF bypass to inject malicious code,
+      such as Cross-Site Scripting (XSS) payloads or malware, into the web application. This
+      can lead to additional attacks against application users, such as cookie theft, session
+      hijacking, or delivering malware to users' devices.11
+  ●​ Session Hijacking: Attackers can steal or reuse authentication tokens by exploiting
+      WAFs that do not enforce strict session expiration or token validation policies.10
+  ●​ Escalation of Privileges: Attackers can leverage this vulnerability to escalate their
+      privileges, gaining higher-level access to the system.35
+  ●​ Impact on Large Language Models (LLMs): If the WAF protects services relying on
+      LLMs, WAF bypasses can lead to attacks like prompt injection, training data poisoning,
+      or Model DoS.32
+How to Assess the Severity of Bypasses and Submit Effective Reports in Bug Bounty
+Programs
+To increase the chances of a WAF bypass report being accepted and rewarded, bug bounty
+hunters should focus on several key aspects:
+  ●​ Focus on Practical Exploitation: Many bug bounty programs, including Cloudflare's
+      own, emphasize that WAF bypasses alone may not be sufficient; they must demonstrate
+      "practical exploitation" or "significant security impact."47 A WAF bypass is often a means
+      to an end (exploiting an underlying vulnerability), not the vulnerability itself.22
+  ●​ Defense-in-Depth Context: The WAF is part of a multi-layered defense strategy.12
+      Bypassing the WAF exposes a weakness in one layer, but the real impact comes from
+      exploiting a vulnerability that the WAF was supposed to protect.
+  ●​ Clear Proof of Concept (PoC): Reports must include a clear and detailed Proof of
+      Concept that demonstrates step-by-step how the WAF was bypassed and the resulting
+      impact (e.g., successful SQL injection after WAF bypass, or XSS payload execution). The
+      PoC must be reproducible.
+  ●​ Severity Assessment: The severity of a WAF bypass depends on the underlying
+      vulnerability it enables. A bypass leading to Remote Code Execution (RCE) is considered
+      critical, while a bypass leading to minor information leakage might be low/medium
+      severity.
+  ●​ Detailed Technical Report: The report should provide a detailed technical description
+      of the bypass technique, an explanation of why it succeeded against Cloudflare WAF
+      (e.g., a specific rule bypassed, or a parsing discrepancy exploited), and the resulting
+      impact on the application.
+Examples of Successful Cloudflare WAF Bypass Bug Bounty Reports
+Published Bug Bounty reports provide real-world examples of successful Cloudflare WAF
+bypasses:
+  ●​ Origin IP Exposure: Reports on HackerOne and Bugcrowd platforms show successful
+      bypasses by identifying the original server IP address and accessing it directly, leading
+      to unfiltered attacks.13 These issues are often resolved and rewarded to researchers.
+  ●​ Incomplete Unicode Character Handling: A HackerOne report for the Doppler
+      platform (which uses Cloudflare) discussed a WAF bypass and incomplete JavaScript
+      handling of Unicode characters, leading to a DOM-XSS vulnerability.47 Although the
+      report was initially closed as "Informative," it highlights the type of parsing/encoding
+      issues that can lead to bypasses. The company's response emphasized the need for a
+      "practical exploit" beyond just bypassing the WAF.
+  ●​ mTLS Session Resumption Vulnerability: Cloudflare itself received a report about a
+      vulnerability in its Mutual TLS (mTLS) implementation that allowed session resumption
+      with another zone without re-authentication, bypassing custom WAF rules that
+      validated the Subject Key Identifier (SKI).48 This shows that even Cloudflare's internal
+      systems can have bypassable flaws.
+Section 5 Insights: In-depth Analysis
+  1.​ WAF Bypass as an "Enabler" for Higher-Impact Vulnerabilities: Available resources
+      consistently show that the consequences of WAF bypass are traditional web application
+      vulnerabilities (SQL injection, XSS, Remote Code Execution (RCE), data breaches,
+      DoS).11 WAF bypass is rarely the ultimate goal in bug bounty programs; rather, it is the
+      crucial step that allows an attacker to exploit an underlying vulnerability that the WAF
+      was designed to block.22 The "Informative" status of some WAF bypass reports 47
+      reinforces the idea that​
+      impact is paramount. Therefore, bug bounty hunters should always strive to link a WAF
+      bypass to an actual application-level vulnerability. The value of a report significantly
+      increases when a practical exploit (e.g., data leakage, unauthorized access) is
+      demonstrated after bypassing the WAF. This requires an understanding of both WAF
+      evasion and common web application vulnerabilities.
+  2.​ Varying Program Scopes Regarding WAF Bypasses: While many programs value WAF
+      bypasses, some explicitly state they are out of scope (e.g., Tesla's program 35), or only
+      accept them if they lead to a "practical exploit" (Doppler/Cloudflare program 47).
+      However, Imperva's program explicitly encourages WAF bypass testing.14 This highlights
+      the lack of a universal consensus on the reportability and severity of WAF bypasses
+      alone. Therefore, bug bounty hunters must carefully read the scope and rules of each
+      program. If a program explicitly states that WAF bypasses are out of scope​
+      unless they lead to a specific impact, the researcher must demonstrate that impact.
+      This means adapting the testing approach and reporting style to the specific program
+      requirements.
+
+6. Recommendations: Strengthening Defenses Against WAF Bypasses
+
+
+Cloudflare WAF is a powerful tool in the cybersecurity arsenal, but it is not a silver bullet. To
+strengthen defenses against WAF bypasses, organizations and bug bounty hunters must
+adopt a multi-faceted approach that combines proper configuration, continuous monitoring,
+and integrated security practices.
+For Organizations: Best Practices for Cloudflare WAF Configuration
+To ensure maximum protection and minimize bypass opportunities, organizations should
+follow these practices:
+   ●​ Defense-in-Depth Strategy: WAFs should not be relied upon as the sole defense layer;
+      they are an additional layer of protection.7 WAFs should be integrated with other
+      security layers such as secure coding practices, patch management, server hardening,
+      and API gateways.12
+   ●​ Proper WAF Configuration and Fine-Tuning:
+         ○​ Enable deep packet inspection for all HTTP requests to counter obfuscated or
+             encrypted payloads.18
+         ○​ Customize rules to detect and block obfuscated payloads.18
+         ○​ Utilize anomaly detection systems (like Cloudflare's attack score) that examine
+             request behavior instead of solely relying on signatures.5
+         ○​ Carefully configure "Skip" actions to avoid unintended bypasses.25
+         ○​ Limit the number of rules to the absolute minimum required to avoid latency
+             issues and false positives.7
+   ●​ Origin IP Protection: Ensure that the origin server's IP address is not exposed to the
+      Internet. This is crucial to prevent direct access bypasses.37 A "strict" setup should be
+      implemented where the origin server only accepts connections from Cloudflare's IP
+      addresses.
+   ●​ Regular Monitoring and Logging: Regularly review WAF logs for anomalous requests
+      (e.g., unusually large requests, large login payloads, or repeated requests with encoded
+      inputs).18 Cloudflare provides "Security Analytics" and "Security Events" tools for this
+      purpose.1 Decrypted matched payloads should be stored in logs for deeper analysis.1
+   ●​ Continuous Testing: Conduct regular penetration tests and use fuzzing tools to
+      evaluate the WAF's response to unexpected inputs.11 This helps identify
+      misconfigurations and bypass opportunities.
+   ●​ Secure Development Lifecycle (SDL): Address underlying application vulnerabilities
+      rather than merely hiding them with a WAF.7 Implement secure coding practices (e.g.,
+      using prepared statements, input sanitization, whitelisting, and proper escaping).12
+  ●​ Stay Informed: Keep WAF policies and threat intelligence updated.12 Leverage
+      Cloudflare's regularly updated managed rulesets.3
+For Bug Hunters: Tips for Increasing Bypass Discovery Chances and Submitting
+High-Quality Reports
+To maximize success in bug bounty programs in the context of WAF bypass, security
+researchers are advised to:
+  ●​ Deep Understanding of WAFs: Understand how WAFs work, their limitations, and
+      common bypass techniques.12
+  ●​ Tool Proficiency: Master the use of penetration testing tools like Burp Suite (with its
+      extensions), SQLMap (with tamper scripts), and OWASP ZAP.8
+  ●​ Think Beyond Signatures: Focus on parsing discrepancies, logical flaws, and
+      misconfigurations rather than just simple obfuscation.10
+  ●​ Chain Attacks: Always try to chain a WAF bypass to a demonstrable impact on the
+      application (e.g., SQL injection, XSS, RCE, data leakage).22
+  ●​ Reconnaissance: Investigate for origin IP exposure.13
+  ●​ Experiment with Encodings and Headers: Test different encoding schemes, nested
+      encodings, and header manipulations.8
+  ●​ Fuzzing: Use automated fuzzing to discover unexpected behaviors and bypasses.10
+  ●​ Read Program Rules: Understand the specific scope and requirements for WAF
+      bypasses in each bug bounty program.14
+  ●​ Clear PoC and Impact: Provide a detailed and reproducible Proof of Concept, clearly
+      demonstrating the security impact.47
+Section 6 Insights: In-depth Analysis
+  1.​ The Critical Link Between Secure Coding and WAF Effectiveness: While WAFs are
+      an important defensive layer, available resources consistently warn against using them
+      as a "quick fix" or to "hide critical vulnerabilities."7 The fundamental problem remains
+      unresolved if underlying vulnerabilities are not addressed through secure coding
+      practices.12 If developers are not educated about security, they will continue to produce
+      insecure code, leading to an endless cycle of WAF rule additions and bypass attempts.7
+      Therefore, organizations need to invest in a comprehensive security program that
+      prioritizes secure development practices (shifting security left in the development
+      cycle). WAFs should complement core application security, not replace it. For bug
+      bounty hunters, this means that even if a WAF is present, the underlying application
+      vulnerabilities are still the primary targets, and bypassing the WAF is key to proving their
+      exploitability.
+  2.​ The Evolving Nature of WAFs and the Need for Continuous Adaptation: Cloudflare
+      WAF is constantly evolving, incorporating machine learning 3, updating managed rules
+      23
+        , and deprecating older features like Firewall Rules in favor of WAF Custom Rules with
+      new actions like "Skip."25 This continuous evolution means that both defenders and
+      attackers must constantly adapt. What works today might not work tomorrow.
+      Therefore, for organizations, this means continuous monitoring, rule tuning, and staying
+      updated on Cloudflare's recommendations and feature changes. For bug bounty
+      hunters, this means the "WAF bypass game" is dynamic. They need to continuously
+      research new techniques, understand Cloudflare's latest features and how they can be
+      bypassed, and be prepared for rapid changes in detection capabilities. This emphasizes
+      the importance of the "continuous testing" recommendation.
+
+7. Conclusion
+Cloudflare WAF is a vital line of defense in protecting modern web applications from a wide
+range of cyber threats. However, as this report has demonstrated, its effectiveness does not
+mean it is entirely impenetrable. WAFs remain vulnerable to bypass due to factors such as
+inherent limitations in request parsing, human misconfiguration, and the continuous arms race
+between evolving attack techniques and defensive updates.
+Bug bounty programs provide a crucial platform for discovering these complex vulnerabilities,
+where skilled security researchers can uncover ways to bypass Cloudflare WAF, enabling them
+to exploit deeper vulnerabilities in the underlying application. The value of a report in these
+programs lies not only in demonstrating the bypass itself but in the ability to link it to a
+tangible and reproducible security impact.
+To strengthen defenses against WAF bypasses, organizations must adopt a multi-layered
+defense strategy that does not solely rely on WAF but complements it with secure
+development practices, robust origin IP protection, continuous monitoring, and regular
+penetration testing. Conversely, bug bounty hunters must continuously evolve their skills,
+master advanced tools, think beyond traditional signatures, and focus on parsing
+discrepancies, logical flaws, and misconfigurations to increase their chances of discovering
+high-impact bypasses.
+GREEN ARMOR Cyber Security emphasizes the importance of this comprehensive
+understanding of Cloudflare WAF and its bypass techniques. By combining theoretical
+knowledge with practical application, organizations can enhance their security posture, and
+security researchers can effectively contribute to building a more secure digital ecosystem.
+
+Works cited
+
+  1.​ Overview · Cloudflare Web Application Firewall (WAF) docs, accessed June 10,
+      2025, https://developers.cloudflare.com/waf/
+  2.​ Concepts · Cloudflare Web Application Firewall (WAF) docs, accessed June 10,
+      2025, https://developers.cloudflare.com/waf/concepts/
+  3.​ Cloud-Based WAF Security | Web Application Firewall - Cloudflare, accessed
+      June 10, 2025, https://www.cloudflare.com/application-services/products/waf/
+  4.​ A WAF for Modern Application Security - Cloudflare, accessed June 10, 2025,
+      https://www.cloudflare.com/static/490f2198961f8bd41a39afea330d65a8/Cloudfla
+      re_WAF_data_sheet.pdf
+  5.​ Stop attacks before they are known: making the Cloudflare WAF smarter,
+      accessed June 10, 2025,
+      https://blog.cloudflare.com/stop-attacks-before-they-are-known-making-the-cl
+      oudflare-waf-smarter/
+  6.​ A WAF for Modern Application Security - Cloudflare, accessed June 10, 2025,
+      https://www.cloudflare.com/static/f56a1e5c2f935b191ecd6795b05be3a0/WAF_da
+      ta_sheet_final.pdf
+  7.​ Web Application Firewall (WAF) - Invicti, accessed June 10, 2025,
+      https://www.invicti.com/learn/web-application-firewall-waf/
+  8.​ Top 10 Ways to Bypass a WAF - BugBase Blogs, accessed June 10, 2025,
+     https://bugbase.ai/blog/top-10-ways-to-bypass-waf
+9.​ Cloudflare Security Services, accessed June 10, 2025,
+     https://www.cloudflare.com/static/f3f114929d85307cc58ff2d67bdc2853/Cloudflar
+     e_Security_2-pager_200227.pdf
+10.​WAFFLED: Exploiting Parsing Discrepancies to Bypass Web Application Firewalls -
+     arXiv, accessed June 10, 2025, https://arxiv.org/html/2503.10846v1
+11.​ What are WAF Bypass Attacks? - Azion, accessed June 10, 2025,
+     https://www.azion.com/en/learning/websec/what-are-waf-bypass-attacks/
+12.​What Is WAF Evasion? | Prophaze Learning Center, accessed June 10, 2025,
+     https://prophaze.com/learn/waf/what-is-waf-evasion/
+13.​SMTP2GO BBP | Report #1536299 - Origin IP found, WAF Cloudflare Bypass -
+     HackerOne, accessed June 10, 2025, https://hackerone.com/reports/1536299
+14.​Imperva - Thales Bug Bounty, accessed June 10, 2025,
+     https://bugcrowd.com/engagements/imperva-mbb
+15.​Hemi VDP | Report #2991326 - Cloudflare WAF Bypass - Origin IP Exposure -
+     HackerOne, accessed June 10, 2025, https://hackerone.com/reports/2991326
+16.​Cloudflare Bypass, origin IP found - CrowdStream - Bugcrowd, accessed June 10,
+     2025,
+     https://bugcrowd.com/disclosures/47a9e679-227b-42e2-ba1e-8d60d54527ab/clo
+     udflare-bypass-origin-ip-found
+17.​Bug Bounty: Tesla - Bugcrowd, accessed June 10, 2025,
+     https://bugcrowd.com/tesla
+18.​How Do Hackers Bypass WAF? | Prophaze Learning Center, accessed June 10,
+     2025, https://prophaze.com/learn/waf/how-do-hackers-bypass-waf/
+19.​What is a Web Application Firewall? WAF Types, Benefits, and Disadvantages
+     Explained, accessed June 10, 2025,
+     https://www.contrastsecurity.com/glossary/web-application-firewall
+20.​Understanding your WAF: How to address common gaps in web application
+     security, accessed June 10, 2025,
+     https://www.datadoghq.com/blog/understanding-your-waf/
+21.​NahamCon2024: Modern WAF Bypass Techniques on Large Attack Surfaces -
+     Sider, accessed June 10, 2025,
+     https://sider.ai/create/video/ai-video-shortener/explore/5bd82787-590e-4120-a2e
+     a-b85530fd15b5
+22.​Bypassing WAFs (Web Application Firewalls) - SECFORCE - Security without
+     compromise, accessed June 10, 2025,
+     https://www.secforce.com/blog/bypassing-wafs-web-application-filters/
+23.​WAF Managed Rules · Cloudflare Web Application Firewall (WAF) docs, accessed
+     June 10, 2025, https://developers.cloudflare.com/waf/managed-rules/
+24.​Custom rules · Cloudflare Web Application Firewall (WAF) docs, accessed June
+     10, 2025, https://developers.cloudflare.com/waf/custom-rules/
+25.​Firewall rules actions - Cloudflare Docs, accessed June 10, 2025,
+     https://developers.cloudflare.com/firewall/cf-firewall-rules/actions/
+26.​Firewall Rules to WAF custom rules migration - Cloudflare Docs, accessed June
+     10, 2025,
+    https://developers.cloudflare.com/waf/reference/migration-guides/firewall-rules-t
+    o-custom-rules/
+27.​How to Bypass Cloudflare Protection? Tutorial for 2025 - IPRoyal.com, accessed
+    June 10, 2025, https://iproyal.com/blog/cloudflare-bypass/
+28.​How to Bypass WAF. HackenProof Cheat Sheet - Hacken.io, accessed June 10,
+    2025, https://hacken.io/discover/how-to-bypass-waf-hackenproof-cheat-sheet/
+29.​What is WAF (Web Application Firewall), And How Do You Bypass It? -
+    SecureLayer7, accessed June 10, 2025,
+    https://blog.securelayer7.net/web-application-firewall/
+30.​SQL Injection Bypassing WAF - OWASP Foundation, accessed June 10, 2025,
+    https://owasp.org/www-community/attacks/SQL_Injection_Bypassing_WAF
+31.​HTTP parameter pollution - Wikipedia, accessed June 10, 2025,
+    https://en.wikipedia.org/wiki/HTTP_parameter_pollution
+32.​Part 1: Bypass a Web Application Firewall (WAF) - Cybrary, accessed June 10,
+    2025, https://www.cybrary.it/blog/part-1-bypass-web-application-firewall-waf
+33.​WAF Bypass Using JSON-Based SQL Injection Attacks - Picus Security, accessed
+    June 10, 2025,
+    https://www.picussecurity.com/resource/blog/waf-bypass-using-json-based-sql-
+    injection-attacks
+34.​Bypass WAF - PortSwigger, accessed June 10, 2025,
+    https://portswigger.net/bappstore/ae2611da3bbc4687953a1f4ba6a4e04c
+35.​What Is Null Byte Injection? How It Works & Examples - Twingate, accessed June
+    10, 2025, https://www.twingate.com/blog/glossary/null%20byte%20injection
+36.​Null byte injection | Radware, accessed June 10, 2025,
+    https://www.radware.com/cyberpedia/application-security/null-byte-injection/
+37.​Cloudflare: How to Secure Your Origin Server? - Vaadata, accessed June 10,
+    2025,
+    https://www.vaadata.com/blog/cloudflare-how-to-secure-your-origin-server/
+38.​Security Alert: How Attackers Can Bypass Next.js Middleware With a Single HTTP
+    Header, accessed June 10, 2025,
+    https://traefik.io/blog/security-alert-how-attackers-can-bypass-next-js-middlew
+    are-with-a-single-http-header/
+39.​Best Methods to Bypass Cloudflare for Web Scraping - Bright Data, accessed
+    June 10, 2025, https://brightdata.com/blog/web-data/bypass-cloudflare
+40.​Bypassing Web Application Firewalls with SQLMap Tamper Scripts - Websec
+    Canada, accessed June 10, 2025,
+    https://www.websec.ca/publication/blog/Bypassing_WAFs_with_SQLMap
+41.​Penetration & WAF Testing Tools - Acunetix, accessed June 10, 2025,
+    https://www.acunetix.com/vulnerability-scanner/pen-testing-tools/
+42.​20 Best Web Application Penetration Testing Tools in 2025 - The CTO Club,
+    accessed June 10, 2025,
+    https://thectoclub.com/tools/best-web-application-penetration-testing-tools/
+43.​Getting Started - Zed Attack Proxy (ZAP), accessed June 10, 2025,
+    https://www.zaproxy.org/getting-started/
+44.​http-waf-detect NSE script - Nmap, accessed June 10, 2025,
+    https://nmap.org/nsedoc/scripts/http-waf-detect.html
+45.​http-waf-fingerprint NSE script — Nmap Scripting Engine documentation,
+    accessed June 10, 2025,
+    https://nmap.org/nsedoc/scripts/http-waf-fingerprint.html
+46.​Privacy Pass · Cloudflare Web Application Firewall (WAF) docs, accessed June 10,
+    2025, https://developers.cloudflare.com/waf/tools/privacy-pass/
+47.​Doppler | Report #2921905 - WAF bypass and java script incomplete handling of
+    Unicode characters might leads to dom-xss | HackerOne, accessed June 10,
+    2025, https://hackerone.com/reports/2921905
+48.​Resolving a Mutual TLS session resumption vulnerability - The Cloudflare Blog,
+    accessed June 10, 2025,
+    https://blog.cloudflare.com/resolving-a-mutual-tls-session-resumption-vulnerabil
+    ity/
+

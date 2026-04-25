@@ -1,0 +1,11 @@
+# Checklist: CSRF
+- [ ] Identify state-changing endpoints (email change, password change, transfer, delete)
+- [ ] Check for CSRF token (in form, in header, in cookie)
+- [ ] Test removing token → does request still succeed?
+- [ ] Test empty token
+- [ ] Test attacker's own token (from another account)
+- [ ] Test Method override (X-HTTP-Method-Override: POST via GET)
+- [ ] Test SameSite cookie attribute (Lax allows top-level GET; Strict blocks all)
+- [ ] Test JSON CSRF with text/plain enctype
+- [ ] Test if Referer/Origin checked → bypass via missing/null origin
+- [ ] Build auto-submit HTML PoC + show impact

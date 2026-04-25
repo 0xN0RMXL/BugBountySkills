@@ -1,0 +1,17 @@
+# Checklist: File Upload
+- [ ] Upload .html with `<script>` → check if served (XSS)
+- [ ] Upload .svg with embedded JS → check if served as image/svg
+- [ ] Upload .pdf with embedded JS / form → check if rendered
+- [ ] Upload polyglot (`.jpg.php`, `image.php.gif`, `image.gif.php`)
+- [ ] Test extension bypass: double ext, null byte, capital, `.phtml`, `.phar`, `.php5`, `.pht`, `.shtml`, `.asp`, `.aspx`, `.cer`, `.jsp`, `.jspx`
+- [ ] Test MIME tampering: `Content-Type: image/jpeg` with PHP body
+- [ ] Test magic bytes (GIF89a + PHP)
+- [ ] Test path traversal in filename: `../../../var/www/html/shell.php`
+- [ ] Test ZIP slip on archive uploads
+- [ ] Test SSRF in upload-from-URL endpoints
+- [ ] Test unrestricted size → DoS
+- [ ] Test SSTI in EXIF metadata for server-side render
+- [ ] Test if files are stored on /tmp and exec'd by background worker
+- [ ] Test for race condition in upload + scan + serve
+- [ ] Test stored XSS in filename
+- [ ] Check executable extension on Windows (.exe, .bat, .ps1) for SMB / cron paths

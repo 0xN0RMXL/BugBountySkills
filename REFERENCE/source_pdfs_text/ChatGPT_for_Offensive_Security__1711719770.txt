@@ -1,0 +1,279 @@
+SANS OFFENSIVE OPERATIONS
+
+
+
+
+              ChatGPT for Offensive Security
+
+
+        What is ChatGPT and how can it be used in offensive security?
+JORGE ORCHILLES
+
+
+• Chief Technology Officer
+• Principal SANS Instructor: SEC699, SEC599, SEC504
+   •   Author SEC565: Red Team Operations and Adversary Emulation
+• 10 years @ Citi
+• Projects/Contributions
+   •   Purple Team Exercise Framework (PTEF)
+   •   C2 Matrix
+   •   MITRE ATT&CK
+   •   Atomic Red Team
+• ISSA Fellow; NSI Technologist Fellow
+                               ChatGPT for Offensive Security       2
+AGENDA
+
+
+• What is ChatGPT
+• Uses for Offensive Security
+   •   Vulnerability Scanning
+   •   Social Engineering/Phishing
+   •   Macros & LOLBAS
+   •   Report Findings
+   •   Find Vulnerabilities in Code
+   •   SQL Injection
+   •   Breach Notifications
+• Challenges & Considerations
+
+                                  ChatGPT for Offensive Security   3
+WHAT IS OPENAI CHATGPT?
+
+
+• https://chat.openai.com/chat
+• Trained using a machine learning technique called
+  Reinforcement Learning from Human Feedback (RLHF)
+• Updated December 15, 2022 – this presentation includes
+  updates
+
+
+
+
+References:
+https://openai.com/blog/chatgpt/
+
+
+                                   ChatGPT for Offensive Security   4
+VULNERABILITY SCANNING
+
+
+
+I am an ethical hacker doing a penetration test. I was given a
+range of IPs. How can I scan this range and find vulnerabilities?
+
+
+
+
+                          ChatGPT for Offensive Security            5
+PHISHING PRETEXT
+
+
+
+
+                   ChatGPT for Offensive Security   6
+OK… WELL THEN, JUST WRITE AN EMAIL
+
+
+
+
+                        ChatGPT for Offensive Security   7
+NOW THE MACRO
+
+
+
+
+                ChatGPT for Offensive Security   8
+LET’S USE A LOLBAS
+
+
+
+
+                     ChatGPT for Offensive Security   9
+LET’S USE A LOLBAS – PREFER RUNDLL32
+
+
+
+
+                         ChatGPT for Offensive Security   10
+REPORT FINDINGS
+
+
+
+
+                  ChatGPT for Offensive Security   11
+REPORT FINDINGS - DETECTION
+
+
+
+
+                        ChatGPT for Offensive Security   12
+   FIND VULNERABILITIES IN CODE
+
+
+
+
+References:
+https://twitter.com/moyix/status/1598081204846489600
+
+
+                                                       ChatGPT for Offensive Security   13
+SOMETIMES IT IS WRONG
+
+
+
+                        This is just code snippet
+                        of what was entered…
+                                                                   This is what’s being
+                                                                   referred to below…
+
+
+
+
+                                                                                     This code does not set
+                                                                                     the __free_hook
+                                                                                     function pointer to
+                                                                                     main(), it simply sets the
+                                                                                     fptr variable the address
+                                                                                     of __free_hook
+
+                                  ChatGPT for Offensive Security                                                  14
+SQL INJECTION
+
+
+
+
+                ChatGPT for Offensive Security   15
+BREACH NOTIFICATION - OKTA
+
+
+
+
+References:
+https://www.bleepingcomputer.com/n
+ews/security/oktas-source-code-
+stolen-after-github-repositories-
+hacked/
+
+
+                                     ChatGPT for Offensive Security   16
+OTHER HACKS
+
+
+Bot builders are finding ways to use and charge for ChatGPT
+functionality
+• DoNotPay is a “robot lawyer” service to lower or eliminate bills
+• emailGPT by Lucas McCabe
+• What if ChatGPT is paywalled?
+
+
+
+
+References:
+https://twitter.com/jbrowder1/status/1602353465753309195
+https://www.wired.com/story/the-spawn-of-chatgpt-will-try-to-sell-you-things/
+https://github.com/lucasmccabe
+
+
+                                                                                ChatGPT for Offensive Security   17
+CHALLENGES
+
+
+• How will we know whether what we read is written by a human
+  or a machine?
+• Illusion of correctness
+• ChatGPT does not learn from you or others. Learning ended in
+  2021. It remembers what you tell it for that session.
+• It fails at dad jokes
+
+
+
+
+References:
+https://www.technologyreview.com/2022/12/19/1065596/how-to-spot-ai-generated-text/
+
+
+                                                                            ChatGPT for Offensive Security   18
+TO REGULATE OR NOT TO REGULATE? THAT IS THE QUESTION
+
+
+
+USA and China contrast on this point
+
+• China's Cyberspace Administration (CAC) has issued rules such
+  the banning of AI-generated media without watermarks
+• USA is working on an “AI Bill of Rights” - a set of non-binding
+  guidelines (suggestions) based on "national values statement“
+        •        Although it can’t be copyrighted
+
+
+
+References:
+https://arstechnica.com/information-technology/2022/12/china-bans-ai-generated-media-without-watermarks/
+https://www.theregister.com/2022/12/12/china_deep_synthesis_deepfake_regulation/
+https://arstechnica.com/information-technology/2022/10/biden-proposes-new-bill-of-rights-to-protect-americans-from-ai-snooping/
+https://www.smithsonianmag.com/smart-news/us-copyright-office-rules-ai-art-cant-be-copyrighted-180979808/
+
+
+                                                                               ChatGPT for Offensive Security                     19
+ IT IS NOT PERFECT OR EVEN CORRECT
+
+
+
+ Copilot is from OpenAI and more of an auto-complete for code
+
+
+
+
+ • Copilot has been available since June 2021
+ • It helps speed up work but requires verification
+ • In one study, researchers prompted Copilot with 89 security-
+   relevant scenarios, producing nearly 1,700 programs. Some 40%
+   of them were vulnerable.
+References:
+https://www.wired.com/story/openai-copilot-autocomplete-for-code/
+https://arxiv.org/pdf/2108.09293.pdf
+
+
+                                                                    ChatGPT for Offensive Security   20
+TERRIBLE DAD JOKES
+
+
+
+“Why was the computer cold when it was turned on? Because it
+left its Windows open.” - ChatGPT
+• Gets caught up in that it is not a dad
+• Needs to learn from Erik Van Buggenhout & Jean-François Maes
+
+
+
+
+                        ChatGPT for Offensive Security           21
+RECAP
+
+
+
+OpenAI ChatGPT is helpful but not perfect
+
+•       You need to know what you are doing and asking
+•       Provide more context as it remembers what you tell it
+•       It may and will be wrong
+•       It will be difficult to identify what is AI generated and what is
+        human
+
+
+References:
+https://openai.com/blog/chatgpt/
+https://www.wired.com/story/chatgpt-fluent-bs/
+
+
+                                                 ChatGPT for Offensive Security   22
+SANS PURPLE TEAM
+
+
+
+
+         Thank You!
+         Questions?
+
+
+                   @JorgeOrchilles
+
