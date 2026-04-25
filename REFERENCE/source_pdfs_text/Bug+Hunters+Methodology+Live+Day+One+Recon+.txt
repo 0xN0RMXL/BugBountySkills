@@ -1,0 +1,1100 @@
+The Bug Hunter’s Methodology Live
+ THE MOST
+IMPORTANT
+   THING
+.ENV
+Sample Targets
+Note Taking
+ In many parts of the course, we will need to
+ keep track of site-hierarchy, tools output,
+ interesting notes, etc.
+
+
+ I will be using mind maps with Xmind throughout
+ the course, but the same effect can be achieved
+ through multiple different programs.
+
+
+ Mind maps allow me to visualize large-scope
+ bug hunting targets and to break up
+ methodology for in-depth bug hunting.
+That mind map grew from a simple template like the one above. Sometimes
+the format changes of how I notate but it’s always similar.
+
+Green = site / entity had no vulns
+Orange = currently in progress of testing or saving for later
+Red = vulns found
+   Checkmark icon (or strikethrough) = completed
+TEMPLATES
+   AND
+REPORTING
+Template
+TemplatesMusings
+          (cont.)
+You can keep track of targets, status/workflow, common tool syntax, and common reporting
+templates:
+
+   # Technical Issue - Cross Site Scripting
+
+
+        The resource `payments` in the parameter `month` is vulnerable to reflected cross-site
+        scripting. Once authenticated if a user is passed the URL:
+
+        * https://XXXX.com/payments?month=%3Cscript%3Ealert(%27XSS%27)%3C/script%3E
+
+        JavaScript will be executed against the person visiting the link.
+
+        * payload: `<script>alert('XSS')</script>`
+
+
+   # Reproduction
+
+
+        * login (create a free account)
+        * visit the link to see the PoC alert
+Templates
+
+
+# Impact
+
+
+    Attackers can leverage XSS to target, phish, and impersonate users of the application. This is
+    possible because the vulnerability allows the attacker to gain the user's trust by using exploit links
+    that appear to be from the application (xxxx.com).
+
+
+    In the context of this application, which handles highly sensitive user date, XSS attacks enable
+    attackers to specifically target and access personally identifiable information (PII) of users. This
+    poses a significant threat to the privacy and security of the affected individuals.
+# Developer and Remediation Notes
+
+     1. Always treat all user input as untrusted data.
+     2. Never insert untrusted data except in allowed locations.
+     3. Always input or output-encode all data coming into or out of the application.
+     4. Always whitelist allowed characters and seldom use blacklisting of characters except in certain use 5. cases.
+     5. Always use a well-known and security encoding API for input and output encoding such as the `OWASP ESAPI` or other framework
+         provided solutions.
+     6. Never try to write input and output encoders unless absolutely necessary. Chances are that someone has already written a good
+         one.
+     7. Never use the DOM function `innerHtml` and instead use the functions `innerText` and `textContent` to 8. prevent against DOM-based
+         XSS.
+     8. As a best practice, consider using the `HTTPOnly` flag on cookies that are session tokens or sensitive tokens.
+     9. As a best practice, consider implementing `Content Security Policy` to protect against XSS and other injection type attacks.
+     10.As a best practice, consider using an auto-escaping templating system
+     11. As a best practice, consider using the `X-XSS-Protection` response header.
+
+# References
+
+     •   https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_(XSS)
+     •   https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)
+     •   https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
+     •   http://projects.webappsec.org/Cross-Site+Scripting
+     •   https://www.cvedetails.com/vulnerability-list/opxss-1/xss.html
+To enhance XSS security:
+
+• While the field/parameter X inherits default framework protections from XSS, further validation and sanitization
+is needed to ensure it meets expected formats, length limits, and character sets. Consider whitelisting characters
+rather than blacklisting. Consider implementing DOMPurify an industry respected XSS sanitization library.
+
+• Encode untrusted data before inserting it into HTML, JavaScript, CSS, or other contexts, using appropriate
+encoding methods. Use HTML entity encoding (&lt;, &gt;, etc.) or context-specific encoding libraries (e.g., OWASP
+Java Encoder) where possible.
+
+• Safely manipulate the DOM by avoiding vulnerable methods like innerHTML and using safer alternatives such as
+textContent or createTextNode.
+
+• Secure cookies by setting the HttpOnly flag to prevent client-side JavaScript access and the Secure flag to
+restrict transmission to secure connections.
+
+• Implement a strict Content Security Policy (CSP) to restrict content loading and execution, specifying trusted
+sources and limiting inline scripts.
+
+• Utilize auto-escaping templating systems that automatically encode untrusted data based on the output context.
+
+• Enable the X-XSS-Protection response header with the value "1; mode=block" to activate the browser's XSS filter.
+RECON
+INTRO
+RECON
+Wide      CONCEPTS
+     vs. Narrow Recon
+Depending on your security testing
+engagement (bounty, pentest, etc.) it’s
+important to understand your scope
+and what kind of testing you prefer to
+do.
+
+Going “wide” results in finding sites that
+have often been left less secure than a
+“flagship” application. Some of these
+wide scope sites may be worth less due
+to their threat profile to the entity, but
+bugs are plentiful.
+
+Focusing “narrow” is more involved and
+yields much higher payouts (normally)
+but requires you to invest a lot of time
+to understand the application.
+What are we after?
+
+           APEX DOMAINS - www.twitch.tv
+            SUBDOMAINS - www.twitch.tv
+                   IP Addresses
+                      Services
+          Contextual Business & Tech Intel
+Why?
+
+ For every subdomain you find you 2x your chance of
+                hacking the target.
+
+ For every apex domain you find you 4x your chance
+               of hacking the target.
+RECON IS A CYCLE
+Good recon has a
+ lot of “jumping”
+     around.
+
+ It’s not a linear
+     process.
+CREATING
+ WIDER
+ SCOPE
+The * represents that we
+have permission to
+enumerate and hack any
+subdomains for the apex
+domain.
+   IP Enumeration: ASNs (Wide Scope Recon)
+
+
+Watch for “catch all”
+statements at the
+bottom of the scope
+sections for all programs
+IP Enumeration: ASNs (WideIn Scope Recon)
+                             your Scope of Work and Rules of
+                          engagement, in a Red Team
+                          Engagement, push for objective
+                          based testing and keep them broad:
+
+                          • “Access to privileged user or
+                            corporate data”
+                          • “Provable disruption of services”
+
+                          Old-school example of ROE and SoW:
+                              •   https://www.halock.com/wp-
+                                  content/uploads/2019/01/HALOCK-Pen-Test-Deliverables-
+                                  12-18.pdf
+ASNs++
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+  ASNs will give us IP Addresses of owned servers
+      These IPs will lead to more apex domains, websites, & services.
+IP Enumeration: ASNs (Wide Scope Recon)
+Autonomous System Numbers are
+given to large enough networks.
+These ASNs will help us track down
+some semblance of an entity’s IT
+infrastructure. The most reliable
+way to get these is manually through
+Hurricane Electric’s free-form
+search:
+http://bgp.he.net
+Because of the advent of cloud
+infrastructure, ASNs aren't always a
+complete picture of a network.
+Rogue assets could exist on cloud
+environments like AWS and Azure.
+Here we can see several IP ranges.
+IP Enumeration: ASNs
+
+
+
+Update our
+notes…
+IP Enumeration: Registrars
+ARIN and RIPE are Regional Registrars who
+allow full text searches for address space:
+
+“As a Regional Internet Registry, we allocate and
+register blocks of Internet number resources to
+Internet service providers (ISPs) and other
+organizations in our geographical service region.
+These Internet number resources are mainly in
+the form of IPv4 and IPv6 address space and
+Autonomous System Numbers (ASNs).”
+
+(US Region)
+https://whois.arin.net/ui/query.do
+
+(EU, Central Asia regions)
+https://apps.db.ripe.net/db-web-
+ui/#/fulltextsearch
+SHODAN++
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+
+     Shodan will give us passive subdomains, IP
+     addresses, vulnerability data, and more…
+ Other Infrastructure
+MANUAL SHODAN         Enumeration: Shodan
+
+Shodan is a tool that continuously spiders
+infrastructure on the internet. It is much more
+verbose than regular spiders. It captures
+response data, cert data, stack profiling data,
+and more. It requires registration.
+
+Example:
+
+https://www.shodan.io/search?query=twitch.tv
+
+It’s often used for threat hunting and passive
+security research.
+
+
+
+                                                  https://www.linkedin.com/feed/update/urn:li:activity:7073267561278095361/
+AUTOMATED
+  Other Infrastructure Enumeration: Shodan
+SHODAN
+(Karma v2)
+For red team engagements
+and bounty, utilizing Shodan
+can be powerful.
+
+One of the best methods to
+get passive recon data and
+possible passive vuln data
+from our target is Karma v2.
+
+
+
+
+Also check out WTFIS
+Other Infrastructure Enumeration: Shodan
+AUTOMATED     SHODANEnumeration: Shodan
+  Other Infrastructure
+(Shosubgo)
+For strictly subdomain discovery using shodan, Shusubgo is
+the most reliable tool.
+
+A savvy hacker might ask;
+
+Why use this tool when Amass has a module for this?
+
+I find for Shodan enumeration and for GitHub enumeration,
+these stand-alone tools give back more results due to their
+narrow focus. About 3-10% increased discoveries.
+OTHER
+  OtherSHODAN    RESOURCES
+        Infrastructure Enumeration: Shodan
+
+While the web interface is useful for small to
+medium scale research, Shodan CLI is
+better for larger projects.
+
+Ben does a banger video on using Shodan
+CLI. It also has some great parsing tips for
+Shodan data and passing to httpx.
+                                                 https://www.youtube.com/watch?v=4CL_8GRNVTE
+OTHER
+  OtherSHODAN    RESOURCES
+        Infrastructure Enumeration: Shodan
+
+Official Shodan Documentation                  Data reference: https://datapedia.shodan.io/
+                                               List of search filters: https://www.shodan.io/search/filters
+                                               Query syntax: https://help.shodan.io/the-basics/search-query-fundamentals
+                                               Official Examples: https://www.shodan.io/search/examples
+
+
+The Shodan Pentesting Guide                    https://community.turgensec.com/shodan-pentesting-guide/
+
+
+
+Cert.sh and Shodan Recon with @GodfatherOrwa   https://www.youtube.com/watch?v=YoXM4m1VEM0
+
+
+
+Shodan Filters and Hacks                       https://www.youtube.com/watch?v=GyZFM5IaH2Y
+
+
+
+100 Shodan Queries for Discovery               https://www.osintme.com/index.php/2021/01/16/ultimate-osint-with-shodan-100-
+                                               great-shodan-queries/
+
+Org filter dorks for technologies              https://mr-koanti.github.io/shodan#
+
+
+
+General other interesting queries              https://github.com/jakejarvis/awesome-shodan-queries
+INTERLUDE
+   FOR
+ TRACKING
+SO FAR WE HAVE…
+•   Apex Domains
+•   Subdomains
+•   IP Addresses / Ranges
+•   Interesting hosts from Shodan
+
+With a large target, tracking this can get crazy.
+
+So we need to talk about it…
+HOW I DO IT (TODAY)
+• Apex Domains (db)
+• Subdomains (db)
+• IP Addresses / Ranges
+  (Spreadsheet/Mindmap)
+• Interesting hosts from Shodan
+  (Spreadsheet/Mindmap)
+• Re-used syntax (Spreadsheet/Mindmap)
+
+      Questions to ask…
+
+            Are you hacking with a team?
+BOUNTYCATCH.PY
+•   Python3 around simple Redis DB
+•   Handles domains from txt files
+•   Dedupes and gives stats upon input
+•   Could use more love
+•   No warranty
+
+
+
+
+                    https://gist.github.com/jhaddix/91035a01168902e8130a8e1bb383ae1e
+ BOUNTYCATCH.PY
+Start a project called “dell”, add your 1st set of subdomains:
+
+python3 bountycatch.py --project dell --file dell.txt
+
+Print the current project:
+
+python3 bountycatch.py --project dell -o print
+
+Add new subdomains to the project:
+
+python3 bountycatch.py --project dell -o add -f githubdell8.txt
+ BBRF
+BBRF does the same
+stuff but uses couchdb
+and has a GUI and
+handles more
+datatypes!
+CRUNCHBASE ++
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+ Crunchbase and sites like it will give us acquisitions
+              and phishing targets.
+
+         Acquisitions are new apex domains.
+CRUNCHBASE
+  Acquisitions: Crunchbase
+So far, we’ve been sniffing around an entity with
+one name. There are however entities that
+operate under many brand names or parent
+organizations who have acquired other brands.
+When these acquisitions happen, IT groups are
+folded together, and infrastructure is
+decommissioned... or are they? When doing
+wide recon, it’s important to look at this.
+Crunchbase is a business analytics aggregator
+which tracks acquisitions.
+We can use it to expand our scope:
+https://www.crunchbase.com/
+
+It also offers a wealth of contextual data about
+our target.
+Wikipedia can also have this data.
+Acquisitions
+
+
+
+Updates to our
+notes…
+Acquisitions
+OCCRP.ORG
+  Acquisitions: Crunchbase
+OCCRP Aleph is a global archive of
+research material for investigative
+reporting. They keep track of 414
+million public entities and parse
+over 252 discrete datasets in more
+than 141 countries.
+
+Here's how to use it for
+reconnaissance, red teaming, and
+bug bounty.
+
+Head over to the site, register, and
+then search on the main page for
+your target company (in this case,
+Tesla Motors).
+OCCRP.ORG
+  Acquisitions: Crunchbase
+Once the search is complete, find
+the entry that comes up, closely
+related to your company and
+associated with the dataset "US
+SEC CorpWatch.“
+OCCRP.ORG
+  Acquisitions: Crunchbase
+
+
+You might have to click
+around on a couple of
+these datasets until you
+find one with a
+substantial list of assets
+and shares, as pictured:
+OCCRP.ORG
+  Acquisitions: Crunchbase
+Upon clicking on "assets
+and shares", you'll be
+given a list of all your
+target's investments and
+acquisitions.
+
+Using this method on a
+site, I've discovered
+some fascinating, small,
+and seldom-mentioned
+acquisitions and
+companies tied to
+targets in both my
+bounty work and my red
+team work.
+CLOUD RECON
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+ We will be using SSL certificate enumeration to find
+             subdomains of our targets.
+
+This can also yield apex domains and internal domain
+                       names.
+CLOUD
+  OtherRECON    (http://kaeferjaeger.gay/)
+        Infrastructure  Enumeration: Shodan
+The hacker collective
+kaeferjaeger scans all the
+major cloud providers every
+week. They pull down every
+IPs SSL certificate data.
+
+They offer it for download.
+
+We can search this cert data
+for our target.
+
+                               http://kaeferjaeger.gay/?dir=sni-ip-ranges
+CLOUD RECON (http://kaeferjaeger.gay/)
+Here we are looking at Dell.com as part of their bug bounty. It does take some shell scripting to get
+the output desired:
+
+           cat *.txt | grep -F ".dell.com" | awk -F'-- ' '{print $2}'| tr ' ' '\n' | tr '[' ' ‘| sed 's/ //’| sed 's/\]//’| grep -F ".dell.com“ | sort -u
+REVWHOIS ++
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+
+    Reverse WHOIS will help up identify new
+               apex domains.
+REVERSE WHOIS
+Here we are looking at a
+WHOIS query on Google.com
+
+We would want to do a reverse
+WHOIS, in this case, on
+“Organization Name” or
+“Registrant Email” to find
+other sites of Google’s.
+REVERSE WHOIS (whoxy.com)
+Whoxy.com is the
+cheapest place on the net
+for access to revwhois
+and whois data.
+REVERSE WHOIS (using whoxy.com API)
+1000 Reverse WHOIS API
+Queries= $10
+
+https://api.whoxy.com/?k
+ey=xxxxx&reverse=whois
+&keyword=google&mode=
+domains
+RECONGPT
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+     AI can help in finding acquisitions and guess
+                      subdomains.
+
+         Acquisitions are new apex domains.
+RECONGPT (using chatgpt4)
+Remember the dataset cuts off
+in 2021. Verify all results!
+
+
+What can you tell me about
+Tesla's acquisitions?
+
+It finds 2 items Crunchbase
+does not list: “Compass
+Automation” and “DeepScale”.
+Crunchbase has the most recent
+one though, “Wiferion.”
+RECONGPT (using chatgpt4)
+We can also use GPT4 to intelligently guess subdomain names for us:
+
+
+
+
+                      https://github.com/jhaddix/SubreconGPT
+  LINKED
+DISCOVERY
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+
+Linked discovery can help in finding apex domains and
+                    subdomains.
+LINKED DISCOVERY (using Burp Pro)
+Another way to to widen our scope is to examine all the links of our main target. We
+can do this using Burp Suite.
+We can then recursively spider all those links for a term with regex, examining those
+links... and their links, and so on... until we have found all sites that could be in our
+scope.
+
+Instructor DEMO
+
+   1. Turn off passive scanning
+   2. Set forms auto to submit (if you’re feeling frisky)
+   3. Set scope to advanced control and use “keyword” of target name (not a normal
+   FQDN)
+   4. Walk+browse main site, then spider all hosts recursively!
+   5. Profit
+Burp site
+tree after
+one
+request…
+We’ve now discovered a
+TON of linked URLs that
+belong to our entity. Not
+only subdomains, but
+completely NEW apex
+domains we can do analysis
+later on in the subdomain
+discovery section.We can
+also now spider these
+hosts.
+Now that we have this data, how do we export it?
+
+Clumsily =(
+
+     1. Select all hosts in the site tree
+     2. In PRO ONLY right click the selected hosts
+     3. Go to “Engagement Tools” -> “Analyze target”
+     4. Save report as an html file
+     5. Copy the hosts from the “Target” section
+LINKED DISCOVERY (NEW Burp Pro)
+
+
+
+              Demo w/ new Burp
+LINKED DISCOVERY
+(Spiders)
+Linked discovery really just counts
+on using a spider recursively.
+One of the most extensible spiders
+for general automation is GoSpider
+written by j3ssiejjj which can be
+used for many things and supports
+parsing js very well.
+In addition hakrawler by hakluke
+has many parsing strategies that
+interest bug hunters.
+AD & ANALYTICS++
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+
+ Ad & Analytics relationships can help in finding apex
+              domains and subdomains.
+Ad/Analytics Relationships
+(using builtwith.com)
+You can also glean related domains and
+subdomains by looking at a target’s
+ad/analytics tracker codes. Many sites
+use the same codes across all their
+domains. Google analytics and New Relic
+codes are the most common. We can
+look at these “relationships” via a site
+called BuiltWith. Builtwith also has a
+Chrome and Firefox extension to do this
+on the fly.
+
+• https://builtwith.com/relationships/tw
+itch.tv
+
+BuiltWith is also a tool we’ll use to profile
+the technology stack of a target later.
+Ad/Analytics Relationships
+(getrelationship.py)
+You can do this on the command line
+with your session cookie and this
+script by Mall0k:
+
+https://raw.githubusercontent.com/
+m4ll0k/Bug-Bounty-
+Toolz/master/getrelationship.py
+Trademark, Terms of Service,
+Copyright, & Privacy Policy
+Recon (using Google)
+
+"© 2019 Twitch Interactive, Inc."
+inurl:twitch
+"© 2018 Twitch Interactive, Inc."
+inurl:twitch
+
+You can Google the copyright and
+terms of service text from a main
+target to glean related hosts.
+SUBDOMAIN
+ SCRAPING
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+
+       Subdomain scraping will give us passive
+                   subdomains.
+Web Scraping for Subdomains
+
+
+Subdomain scraping will by far be the
+    biggest contributor to your
+         subdomain enumeration.
+Web Scraping for Subdomains
+Domain and URL information gets used
+across the internet for a multitude of
+reasons. There are all sorts of data projects
+that expose databases of URLs or domains
+they store.
+
+In a wide scope project, we want to query
+these sites and APIs to discover what
+subdomains they might know about related
+to our target.
+
+Luckily, we don't have to do this manually.
+There are tools for this.
+
+This is only a small list of sources. Many
+more exist.
+1. site:twitch.tv -www.twitch.tv
+2. site:twitch.tv -www.twitch.tv -watch.twitch.tv
+3. site:twitch.tv -www.twitch.tv -watch.twitch.tv -dev.twitch.tv
+4. ...
+Subdomain Scraping (using Amass)
+For scraping subdomain data, there are
+currently two industry leading tools, Amass
+and Subfinder.
+
+They parse all the “sources” referenced in the
+previous slide, and more.
+
+Amass has extensible output, brute forcing,
+and more.
+Amass is written by Jeff Foley
+Amass also
+groups these
+scraped domains
+to ASNs, Owners,
+and IP Ranges.
+Useful.
+Subdomain Scraping
+(using Subfinder)
+
+Subfinder written by Project
+Discovery is also a best-in-class
+tool to gather this data from
+various websites and APIs
+I use both tools and concatenate
+and uniq the outputs.
+Subdomain
+Scraping
+(using BBOT)
+BBOT is a new entry
+to subdomain
+scraping. It wraps
+around some other
+tools and adds a few
+new sources. I have
+added it to my
+workflow.
+It does much more
+than just subdomain
+scraping as well.
+Subdomain Scraping (using BBOT, working with BBOT output)
+
+ The output is a file at “/root/.bbot/scans/{scan_name}/” You
+ can clean up the output to just found subdomains per line like
+ so:
+
+
+ cat /root/.bbot/scans/{scan_name}/output.txt | grep -F
+ '[DNS_NAME]’ | awk '{print $2}'
+SUBDOMAIN
+ SCRAPING
+  CONFIG
+ Wide vs. Narrow Recon
+WHY?
+
+
+
+ Configuring the APIs for the tools increases their
+               efficacy by up to 50%
+Subdomain Scraping Configurations
+
+As you saw in a few of the screenshots many
+of these tools need API keys to access
+certain sources.
+You absolutely need these to be effective
+If you look at my Amass, you can see it has x
+data sources:
+amass enum –list
+I want to enable any NOT enabled by
+providing API keys (if they are free)
+amass enum -list | grep -v "\*"
+Priority #1 (Chaos)
+
+
+
+
+                      https://chaos.projectdiscovery.io/#/
+
+
+                         Let’s talk about Chaos secret…
+Priority #2 (GitHub)
+
+
+
+
+                       https://github.com/settings/tokens
+
+                             How many can you get?
+The Rest (free)
+• FacebookCT
+  •   Open https://developers.facebook.com and Sign in as a facebook (developer)
+  •   Go to apps, create app
+  •   Create app > Your app page
+  •   Get apikey
+  •   setting > advance setting > security > client token
+  •   Get Secret
+
+
+
+• PassiveTotal
+  •   https://community.riskiq.com/settings
+
+
+
+
+• Shodan (Cheap)
+
+                                              Put them all in: ~/.config/amass/config.ini
+Paid / Limited Sources
+
+• Rapid 7 Sonar
+  • Good dataset but only avail upon req, no one has it
+    recently
+
+
+
+• SecurityTrails
+  • The best paid API
+
+
+
+• SpiderFootHX
+  • 2nd best paid API
+  • Acquired, trying to DM vendor
+   GITHUB
+ENUMERATION
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+      Github Enumeration can give us passive
+  subdomains, IP addresses, vulnerability data, and
+                      more…
+GITHUB ENUMERATION
+
+
+Note:
+
+Most tools in this arena that offer automation to find things are targeted at
+scanning a single repo or organization. This is the opposite of what we
+want. We want to scour all repos, especially personal ones, to find the
+following data.
+GITHUB
+ENUMERATION
+(subdomains with
+github-subdomains)
+We want to extract any
+referenced subdomains of
+our target that are on
+GitHub.
+Why use a stand-alone
+tool?
+It’s simply the best and the
+API is random.
+You need many API keys
+and many runs to complete
+this method.
+GITHUB ENUMERATION (Manually)
+Many organizations quickly grow in their
+engineering teams. Sooner or later a new
+developer, intern, contractor, or other staff will
+leak source code online, usually through a
+public Github repo that they mistakenly thought
+they had set private.
+Enjoy my github dork collection... They win... a
+lot.
+** Helps if your console supports clickable
+hyperlinks
+https://gist.github.com/jhaddix/1fb7ab2409ab
+579178d2a79959909b33
+Github Recon (cont.)
+The last list and script was designed to find sensitive
+source code, most often exposure of sensitive credentials
+                                                            The repo mentioned earlier
+(very common).                                              by Gwendal Le Coguic called
+You can also learn a lot about:                             “github- search” has some
+                                                            automated github tools as
+• New hosts and TLDs                                        well.
+    o Be sure to keep a lookout for cloud storage (AWS
+       and Azure)
+        ▪ amazonaws.com                                     Also check out
+• Host naming patterns
+    o bender.company.com, fry.company.com,                  @th3g3ntelman’s full module
+       zoidberg.company.com, ...
+• Technology stacks
+                                                            on Github and Sensitive data
+    o DBMS type for injection                               Exposure.
+    o OSS components for CVE’s
+SUBDOMAIN
+BRUTEFORCE
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+  Subdomain brute forcing will give us subdomains.
+
+    We will run it on all discovered apex domains.
+Brute forcing for Subdomains
+
+The other option to discover subdomains is brute force.
+
+If we try and resolve thistotallydoesntexist.company.com we will *usually*
+not get a record. So, we can use a large list of common subdomain names
+and just try and resolve them analyzing if they succeed.
+Brute forcing for Subdomains (Puredns)
+The issue with brute forcing
+is that it’s SLOW.
+Some tools have come out
+that are both threaded and
+can use multiple DNS
+resolvers simultaneously.
+This speeds up this process
+significantly. massdns
+pioneered this idea.
+While Amass does have a
+brute force module it is not
+optimal for this task.
+I use Puredns by d3mondev.
+It is a wrapper and feature
+enhancer to massdns.
+What about fresh, reliable DNS resolvers?
+
+
+
+
+                       https://github.com/trickest/resolvers
+ALTERATION /
+PERMUTATION
+BRUTEFORCE
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+
+  This will give us even more esoteric subdomains.
+Permutation / Alteration Scanning
+                                                  dev.company.com
+When an admin names a subdomain,
+sometimes its’ straightforward.
+                                                  dev1.company.com
+Other times… it’s not.                            dev2.company.com
+
+While traditional subdomain bruteforce uses
+lists, it historically had no ability to find
+                                                  dev-1.company.com
+patterned naming of subdomains. The first tool    dev-2.company.com
+to attempt to recognize these patterns and
+brute force for some of them was altdns written
+by Nathaniel Wakelam and Shubham Shah.
+                                                  dev.1.company.com
+                                                  dev.2.company.com
+Permutation / Alteration Scanning (with dnsgen)
+Using tokenizing and pattern generation…
+
+AKA magic
+
+dnsgen builds lists of possible permutations / alterations of subdomains.
+
+You feed it the results of amass, subfinder, bbot, etc.
+
+It only generates these subdomain names, it does not resolve them. So, we use
+puredns with it.
+Permutation / Alteration Scanning (with dnsgen)
+
+  cat <file_of_subdomains.txt> | dnsgen - | puredns resolve --resolvers resolvers.txt
+ SCREEN
+SHOTTING
+ Wide ARE
+WHAT  vs. Narrow Recon
+           WE AFTER?
+
+
+
+  This will give us a visual of all our gathered data.
+Screenshotting for Prioritization
+At this point we have a lot of attack
+surface. We can feed possible sites to a
+tool and attempt to screenshot the
+results. This will allow us to “eyeball”
+things that might be interesting.
+
+There are many tools for this. Aquatone
+is a wider recon framework that does
+this, HTTPscreenshot, and Eyewitness.
+I use Eyewitness because it will prepend
+both the http and https protocol for
+each domain we have observed. I’m not
+highly tied to this tool though, find one
+that works for you.
+Screenshotting for Prioritization (cont.)
+ EDGE
+ CASE
+RECON
+Stuff to watch for
+(origin domains)
+Content delivery networks (CDNs) are used to
+deliver website content/traffic more efficiently
+and to reduce heavy loads on servers.
+
+When using a CDN, it is not a proxy for the real
+webserver. The real webserver is the origin.
+
+Many times, in security testing a CDN will block
+security testing payloads.
+
+If you find the origin server, you do not get
+blocked.
+Stuff to watch for (other)
+
+
+          • Logins
+          • Default content
+          • Bypass domains (dev,stage qa, ww1,ww2,)
+          • 302’s
+          • Basic Auth
+          • Old looking frameworks
+          • Outdated Priv Pol / Trademark
+Favicon Analysis (FavFreak)
+What if you have a large scope
+and several hundred web servers
+to analyze?
+
+What if screenshots aren’t
+enough?
+
+What if many of the roots of the
+webservers are black pages?
+
+You can attempt to fingerprint
+COTS application by their favicon
+using favfreak.
+   RECON
+FRAMEWORKS
+Recon Frameworks
+Some people dislike deep recon. It comes with data
+management, tooling updates, environment upkeep,
+needs cmdline knowledge, etc.
+
+For those of you that wish to get the results of great
+(not superb) recon, there exists several frameworks
+that automate some of the stuff we covered today.
+
+I’ve tested many of these.
+
+These are my current favorite free ones.
+
+
+Also investigating OsmedeusNG
+Frameworks (ReconFTW)
+Arguably my most used and favorite.
+
+•   Web GUI – Yes (NEW)
+•   Passive scraping - Yes
+•   Brute force - Yes
+•   Permutations - Yes
+•   Certificate transparency - Yes
+•   Github source code scraping - Yes
+•   Analytics analysis - Yes
+•   Screenshotting - Yes
+•   De-duplication - Yes
+•   Port Scanning - Yes
+•   Introductory content discovery – Yes
+
+
+Full Blog on ReconFTW
+Frameworks (ReconFTW)
+Frameworks (reNgine)
+My 2nd favorite but many people's 1st
+choice atm.
+
+•   Web GUI - Yes
+•   Passive scraping - Yes
+•   Brute force - Yes
+•   Permutations - Yes
+•   Certificate transparency - Yes
+•   Github source code scraping - Yes
+•   Analytics analysis - Yes
+•   Screenshotting - Yes
+•   De-duplication - Yes
+•   Port Scanning - Yes
+•   Introductory content discovery - Yes
+

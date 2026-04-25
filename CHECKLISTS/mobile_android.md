@@ -1,0 +1,13 @@
+# Checklist: Mobile Android
+- [ ] Decompile APK (jadx, apktool)
+- [ ] Check exported activities, services, providers, receivers
+- [ ] Check deep links (intent filters)
+- [ ] Check WebView config (JS enabled, file:// scheme, addJavascriptInterface)
+- [ ] Hardcoded secrets in strings.xml / java code
+- [ ] Cleartext HTTP (cleartextTrafficPermitted, network_security_config.xml)
+- [ ] Cert pinning + bypass (objection, frida-multiple-unpinning)
+- [ ] Backup allowed (android:allowBackup="true")
+- [ ] Debuggable (android:debuggable="true")
+- [ ] Test for MASVS V1-V8 controls
+- [ ] Frida-based runtime hooking + tracing
+- [ ] Burp proxy on emulator / Magisk root device

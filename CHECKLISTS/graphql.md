@@ -1,0 +1,11 @@
+# Checklist: GraphQL
+- [ ] Test introspection enabled
+- [ ] If disabled, run clairvoyance for partial schema recovery
+- [ ] Run Inql/graphql-cop for misconfigs
+- [ ] Test for SQLi/NoSQLi in string args
+- [ ] Test BOLA on every query/mutation that takes ID
+- [ ] Test BFLA — admin mutations callable by non-admin
+- [ ] Test rate limiting per query (alias-based DoS, batched queries)
+- [ ] Test query depth — recursive nested queries → DoS
+- [ ] Test field suggestion typos for unauth introspection leak
+- [ ] Test mutation visibility — sensitive ops should be in scope-locked schema

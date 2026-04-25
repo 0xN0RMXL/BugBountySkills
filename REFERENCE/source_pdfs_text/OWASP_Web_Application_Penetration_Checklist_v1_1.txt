@@ -1,0 +1,609 @@
+OWASP Web Application Penetration Checklist
+Version 1.1
+
+
+
+
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+Introduction......................................................................................................................... 3
+   Using this Checklist as an RFP Template....................................................................... 3
+   Using this Checklist as a Benchmark.............................................................................. 3
+   Using this Checklist as a Checklist................................................................................. 4
+   About the OWASP Testing Project (Parts One and Two).............................................. 4
+   The OASIS WAS Standard............................................................................................. 4
+   About OWASP................................................................................................................ 5
+   Feedback ......................................................................................................................... 5
+Penetration Testing Workflow............................................................................................ 6
+Checklist ............................................................................................................................. 8
+   AppDOS.......................................................................................................................... 8
+   AccessControl ................................................................................................................. 9
+   Authentication............................................................................................................... 10
+   Authentication. User ..................................................................................................... 10
+   Authentication. SessionManagement............................................................................ 11
+   Configuration. Management ......................................................................................... 12
+   Configuration. Management Infrastructure .................................................................. 13
+   Configuration. Management. Application .................................................................... 13
+   Error Handling .............................................................................................................. 13
+   DataProtection............................................................................................................... 14
+   DataProtection. Transport ............................................................................................. 14
+   InputValidation ............................................................................................................. 15
+   InputValidation.SQL..................................................................................................... 15
+   InputValidation.OS ....................................................................................................... 15
+   InputValidation.LDAP.................................................................................................. 15
+   InputValidation.XSS..................................................................................................... 15
+   BufferOverflow............................................................................................................. 16
+Appendix A - The OASIS WAS Vulnerability Types...................................................... 17
+
+
+
+
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+Introduction
+Penetration testing will never be an exact science where a complete list of all possible
+issues that should be tested can de defined. Indeed penetration is only an appropriate
+technique to test the security of web applications under certain circumstances. For
+information about what these circumstances are, and to learn how to build a testing
+framework and which testing techniques you should consider, we recommend reading the
+OWASP Testing Framework Part One (http://www.owasp.org). Risk Management Guide
+for Information Technology Systems, NIST 800-30 1describes vulnerabilities in
+operational, technical and management categories. Penetration testing alone does not
+really help identify operational and management vulnerabilities.
+
+Many OWASP followers (especially financial services companies) however have asked
+OWASP to develop a checklist that they can use when they do undertake penetration
+testing to promote consistency among both internal testing teams and external vendors.
+As such this list has been developed to be used in several ways including;
+
+    •     RFP Template
+    •     Benchmarks
+    •     Testing Checklist
+
+This checklist provides issues that should be tested. It does not prescribe techniques that
+should be used.
+
+Using this Checklist as an RFP Template
+Some people expressed the need for a checklist from which they can request services
+from vendors and consulting companies to ensure consistency, and from which they can
+compare approaches and results on a level playing field. As such, this list can form the
+basis of a Request for Proposal for services to a vendor. In effect, you are asking the
+vendor to perform all of the services listed.
+
+NB: If you or your company develops an RFP Template from this checklist, please share
+it with OWASP and the community. Send it to testing@owasp.org with the Subject
+[Testing Checklist RFP Template].
+
+Using this Checklist as a Benchmark
+Some people expressed the need for a checklist from which they can base their internal
+testing on and from which they can then use the result to develop metrics. Using the same
+checklist allows people to compare different applications and even different sources of
+development as “apples to apples”. The OASIS WAS project (http://www.oasis-
+open.org/committees/tc_home.php?wg_abbrev=was) will provide a set of vulnerability
+types that can be used as a classification scheme and therefore have been adopted into
+
+
+1
+ http://csrc.nist.gov/publications/nistpubs/index.html#sp800-30 – The revised version can be found at
+http://csrc.nist.gov/publications/drafts/SP800-30-RevA-draft.pdf
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+this checklist to help people sort data easier. For more information see the section on
+OASIS WAS below.
+
+Using this Checklist as a Checklist
+Of course many people will want to use this checklist as just that; a checklist or crib
+sheet. As such the list is written as a set of issues that need to be tested. It does not
+prescribe techniques that should be used (although examples are provided).
+
+About the OWASP Testing Project (Parts One and Two)
+The OWASP is currently working on a comprehensive Testing Framework. By the time
+you read this document Part One will be close to release and Part Two will be underway.
+Part One of the Testing Framework describes the Why, What, Where and When of testing
+the security of web applications and Part Two goes into technical details about how to
+look for specific issues using source code inspection and a penetration testing (for
+example exactly how to find SQL Injection flaws in code and through penetration
+testing). This check list is likely to become an Appendix to Part Two of the OWASP
+Testing framework along with similar check lists for source code review.
+
+
+The OASIS WAS Standard
+The issues identified in this check list are not ordered in a specific manner of importance
+or criticality. Several members of the OWASP Team are working on an XML standard to
+develop a way to consistently describe web application security issues at OASIS. The
+mission of OASIS is to drive the development, convergence, and adoption of structured
+information standards in the areas of e-business, web services, etc. For more information
+about OASIS you should view the website http://www.oasis-open.org.
+
+We believe OASIS WAS will become a very important standard which will allow people
+to develop vulnerability management / risk management systems and processes on top of
+the data. As this work is taking place at an official standards body its independence of
+vendor bias or technology and the fact that its longevity can be guaranteed, makes it
+suitable to base your work on. Part of the OASIS WAS standard will be a set of
+vulnerability types. These are standard vulnerability issues that will have standard textual
+definitions that allow people to build consistent classification schemes / thesauruses.
+Using these vulnerability types people can create useful views into their vulnerability
+data.
+
+The OASIS WAS XL standard is due to be published in August. The WAS Vulnerability
+Types are due to be published as a separate document in draft at the end of April. As such
+this list “may” change when the standard is ratified although this is unlikely.
+
+As we believe the WAS vulnerability types will become an integral part of application
+vulnerability management in the future, it will be tightly coupled to all OWASP work
+such as this checklist and the OWASP Testing Framework.
+
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+About OWASP
+OWASP is a volunteer organization that is dedicated to developing knowledge based
+documentation and reference implementations and software that can be used by system
+architects, developers and security professionals. Our work promotes and helps
+consumers build more secure web applications.
+
+For more information about OWASP see the web site http://www.owasp.org
+
+
+Feedback
+To provide feedback on this checklist please send an email to testing@owasp.org with a
+subject [Pen Testing Checklist Feedback]. We welcome all comments and suggestions. If
+your suggestion is for a new issue, please detail the issue as you would like to see it in the
+checklist. If your suggestion is a correction or improvement, please send your comments
+and a suggested completed text for the change. As a volunteer group, the easier your
+changes are to make, the faster they can be incorporated into our revisions.
+
+
+
+
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+Penetration Testing Workflow
+Clearly, by promoting a checklist we are promoting methodical and repeatable testing.
+Whilst it is beyond scope of this checklist to prescribe a penetration testing methodology
+(this will be covered in OWASP Testing Part Two), we have included a model testing
+workflow below. Below is a flow diagram that the tester may find useful when using the
+testing techniques described in this document. It is important to note that an infrastructure
+level penetration test should be performed prior to performing the application test. In
+some cases, the server operating system can be exploited and give the tester further
+leverage in exploiting the web application.
+
+The flow diagram below is based around several steps:
+
+    -     The penetration test starts by gathering all possible information available
+          regarding the infrastructure and applications involved. This stage is paramount as
+          without a solid understanding of the underlying technology involved, sections
+          may be missed during the testing phase
+
+    -     The test should follow all the different phases described below
+
+    -     Testers should attempt to exploit all discovered vulnerabilities. Even if the
+          exploitation fails, the tester will have a better understanding of the vulnerability
+          risk
+
+    -     Any information returned by checking for vulnerabilities, for example,
+          programming errors, source code retrieval or other internal information
+          disclosure, should be used to re-assess the overall understanding of the application
+          and how it performs
+
+    -     If at any point during the testing a vulnerability is detected, which may lead to the
+          successful compromise of the target or disclose business-critical information, the
+          relevant contact for the company should be contacted immediately and made
+          aware of the situation and risks involved.
+
+
+
+
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+Checklist
+
+Category            Ref Number                      Name                                     Objective                                            Notes
+                    OWASP-AD-001                    Application Flooding                     Ensure that the application                          Use various fuzzing
+AppDOS                                                                                       functions correctly when presented                   tools to perform this
+                                                                                             with large volumes of requests,                      test (e.g. SPIKE)
+                                                                                             transactions and / or network
+                                                                                             traffic.
+                    OWASP-AD-002                    Application Lockout                      Ensure that the application does
+                                                                                             not allow an attacker to reset or
+                                                                                             lockout user’s accounts.
+
+
+
+
+                                                                 The OWASP Web Application Penetration Check List
+    This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and understand that license and copyright conditions.
+Category                  Ref Number                Name                                  Objective                                               Notes
+                          OWASP-AC-                 Parameter Analysis                    Ensure that the application enforces                    Typically this
+AccessControl             001                                                             its access control model by ensuring                    includes
+                                                                                          that any parameters available to an                     manipulation of form
+                                                                                          attacker would not afford additional                    fields, URL query
+                                                                                          service.                                                strings, client-side
+                                                                                                                                                  script values and
+                                                                                                                                                  cookies.
+                          OWASP-AC-                 Authorization                         Ensure that resources that require
+                          002                                                             authorization perform adequate
+                                                                                          authorization checks before being
+                                                                                          sent to a user.
+                          OWASP-AC-                 Authorization                         Ensure that once valid user has                         i.e. accountnumber,
+                          003                       Parameter                             logged in it is not possible to change                  policynumber,usernr
+                                                    Manipulation                          the session ID’s parameter to reflect                   etc.
+                                                                                          another user account
+                          OWASP-AC-                 Authorized                            Check to see if its possible to access
+                          004                       pages/functions                       pages or functions which require
+                                                                                          logon but can be bypassed
+                          OWASP-AC-                 Application Workflow                  Ensure that where the application
+                          005                                                             requires the user to perform actions
+                                                                                          in a specific sequence, the sequence
+                                                                                          is enforced.
+
+
+
+
+                                                                 The OWASP Web Application Penetration Check List
+    This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and understand that license and copyright conditions.
+Category                     Ref Number              Name                    Objective                                                             Notes
+                             OWASP-                  Authentication endpoint Ensure that users are only asked to                                   This ensures that the
+Authentication               AUTHN-001               request should be HTTPS submit authentication credentials                                     user knows who is
+                                                                             on pages that are served with SSL.                                    asking for his / her
+                                                                                                                                                   credentials as well as
+                                                                                                                                                   where they are being
+                                                                                                                                                   sent.
+                             OWASP-                  Authentication bypass                    Ensure that the authentication                       Typically this
+                             AUTHN-002                                                        process can not be bypassed.                         happens in
+                                                                                                                                                   conjunction with
+                                                                                                                                                   flaws like SQL
+                                                                                                                                                   Injection.
+                             OWASP-                  Credentials transport                    Ensure that usernames and                            Typically this should
+Authentication.              AUTHN-003               over an encrypted                        passwords are sent over an                           be SSL.
+User                                                 channel                                  encrypted channel.
+                             OWASP-                  Default Accounts                         Check for default account names
+                             AUTHN-004                                                        and passwords in use
+                             OWASP-                  Username                                 Ensure that the username is not
+                             AUTHN-005                                                        public (or “wallet”) information
+                                                                                              such as email or SSN.
+                             OWASP-                  Password Quality                         Ensure that the password
+                             AUTHN-006                                                        complexity makes guessing
+                                                                                              passwords difficult.
+                             OWASP-                  Password Reset                           Ensure that user must respond to a                   Ensure that
+                             AUTHN-007                                                        secret answer / secret question or                   passwords are not
+                                                                                              other predetermined information                      sent to users in email.
+                                                                                              before passwords can be reset.
+
+
+
+                                                                  The OWASP Web Application Penetration Check List
+     This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and understand that license and copyright conditions.
+Category                    Ref Number              Name                                     Objective                                            Notes
+                            OWASP-                  Password Lockout                         Ensure that the users account is
+                            AUTHN-008                                                        locked out for a period of time
+                                                                                             when the incorrect password is
+                                                                                             entered more that a specific
+                                                                                             number of times (usually 5).
+                            OWASP-                  Password Structure                       Ensure that special meta characters                  Can be useful when
+                            AUTHN-009                                                        cannot be used within the                            performing SQL
+                                                                                             password                                             injection
+                            OWASP-                  Blank Passwords                          Ensure that passwords are not
+                            AUTHN-010                                                        blank
+                            OWASP-                  Session Token Length                     Ensure that the session token is of
+Authentication.             AUTHSM-                                                          adequate length to provide
+SessionManagem              001                                                              protection from guessing during an
+ent                                                                                          authenticated session.
+                            OWASP-                  Session Timeout                          Ensure that the session tokens are
+                            AUTHSM-                                                          only valid for a predetermined
+                            002                                                              period after the last request by the
+                                                                                             user.
+                            OWASP-                  Session Reuse                            Ensure that session tokens are
+                            AUTHSM-                                                          changed when the user moves
+                            003                                                              from an SSL protected resource to
+                                                                                             a non-SSL protected resource.
+                            OWASP-                  Session Deletion                         Ensure that the session token is
+                            AUTHSM-                                                          invalidated when the user logs out.
+                            004
+                            OWASP-                  Session Token Format                     Ensure that the session token is
+                            AUTHSM-                                                          non-persistent and is never written
+                            005                                                              to the browsers history or cache.
+
+
+
+                                                                 The OWASP Web Application Penetration Check List
+    This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and understand that license and copyright conditions.
+Category                   Ref Number                Name                                     Objective                                            Notes
+                           OWASP-CM-                 HTTP Methods                             Ensure that the web server does
+Configuration.             001                                                                not support the ability to
+Management                                                                                    manipulate resources from the
+                                                                                              Internet (e.g. PUT and DELETE)
+                           OWASP-CM-                 Virtually Hosted Sites                   Try and determine if site is                         If there are further
+                           002                                                                virtually hosted.                                    sites, they could be
+                                                                                                                                                   vulnerable and lead
+                                                                                                                                                   to the compromise of
+                                                                                                                                                   the base server
+                           OWASP-CM-                 Known Vulnerabilities /                  Ensure that known vulnerabilities
+                           003                       Security Patches                         which vendors have patched are
+                                                                                              not present.
+                           OWASP-CM-                 Back-up Files                            Ensure that no backup files of
+                           004                                                                source code are accessible on the
+                                                                                              publicly accessible part of the
+                                                                                              application.
+                           OWASP-CM-                 Web Server                               Ensure that common configuration
+                           004                       Configuration                            issues such as directory listings
+                                                                                              and sample files have been
+                                                                                              addressed
+                           OWASP-CM-                 Web Server Components                    Ensure that web server
+                           005                                                                components like Front Page Server
+                                                                                              Extensions or Apache modules do
+                                                                                              not introduce any security
+                                                                                              vulnerabilities
+                           OWASP-CM-                 Common Paths                             Check for existence of common      /backup & /admin
+                           006                                                                directories within the application may contain
+                                                                                              root                               information
+
+
+                                                                  The OWASP Web Application Penetration Check List
+     This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and understand that license and copyright conditions.
+Category                   Ref Number                Name                                     Objective                                            Notes
+                           OWASP-CM-                 Language/Application                     I.e. J2EE environmental quirks e.g
+                           007                       defaults                                 Availability of snoop.jsp /*Spy.jsp
+                                                                                              and loaded modules
+                           OWASP-CM-                 Infrastructure Admin                     Ensure that administrative
+Configuration.             008                       Interfaces                               interfaces to infrastructure such as
+Management                                                                                    web servers and application
+Infrastructure                                                                                servers are not accessible to the
+                                                                                              Internet.
+                           OWASP-CM-                 Application Admin                        Ensure that administrative
+Configuration.             009                       Interfaces                               interfaces to the applications are
+Management.                                                                                   not accessible to the Internet.
+Application
+
+
+Category             Ref Number                      Name                                     Objective                            Notes
+                     OWASP-EH-001                    Application Error                        Ensure that the application does     This typically occurs
+Error                                                Messages                                 not present application error        when applications
+Handling                                                                                      messages to an attacker that could   return verbose error
+                                                                                              be used in an attack.                messages such as
+                                                                                                                                   stack traces or
+                                                                                                                                   database errors.
+                     OWASP-EH-002                    User Error Messages                      Ensure that the application does     This typically occurs
+                                                                                              not present user error messages to when applications
+                                                                                              an attacker that could be used in an return error messages
+                                                                                              attack.                              such as “User does
+                                                                                                                                   not exist” or “User
+                                                                                                                                   Correct, Password
+                                                                                                                                   Incorrect”
+
+
+
+                                                                  The OWASP Web Application Penetration Check List
+     This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and understand that license and copyright conditions.
+Category                  Ref Number                Name                                     Objective                                            Notes
+                          OWASP-DP-                 Sensitive Data in HTML                   Ensure that there is no sensitive                    This typically occurs
+DataProtection            001                                                                data in the HTML (cached in the                      when developers
+                                                                                             browser history) that could lead an                  leave information in
+                                                                                             attacker to mount a focused attack.                  html comment or the
+                                                                                                                                                  application renders
+                                                                                                                                                  names and addresses
+                                                                                                                                                  in HTML.
+                          OWASP-DP-                 Data Storage                             Ensure where required, data is
+                          002                                                                protected to protect its
+                                                                                             confidentiality and integrity.
+                          OWASP-DP-                 SSL Version                              Ensure that SSL versions                             Typically this means
+DataProtection.           003                                                                supported do not have                                supporting SSL 3 and
+Transport                                                                                    cryptographic weaknesses.                            TLS 1.0 only.
+                          OWASP-DP-                 SSL Key Exchange                         Ensure that the web server does                      Typically ADH
+                          004                       Methods                                  not allow anonymous key                              Anonymous Diffie-
+                                                                                             exchange methods.                                    Hellman.
+                          OWASP-DP-                 SSL Algorithms                           Ensure that weak algorithms are                      Typically algorithms
+                          005                                                                not available.                                       such as RC2 and
+                                                                                                                                                  DES.
+                          OWASP-DP-                 SSL Key Lengths                          Ensure the web site uses an                          Most web sites
+                          006                                                                appropriate length key.                              should enforce 128
+                                                                                                                                                  bit encryption.
+                          OWASP-DP-                 Digital Certificate                      Ensure the application uses valid                    Ensure that the digital
+                          007                       Validity                                 digital certificates.                                certificate is valid,
+                                                                                                                                                  that is to say its
+                                                                                                                                                  signature, host, date
+                                                                                                                                                  etc are all valid.
+
+
+
+                                                                 The OWASP Web Application Penetration Check List
+    This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and understand that license and copyright conditions.
+Category                   Ref Number                Name                                     Objective                                            Notes
+                           OWASP-IV-                 Script Injection                         Ensure that any part of the                          Classic case of Cross
+InputValidation            001                                                                application that allows input does                   Site Scripting but
+                                                                                              not process scripts as part of the                   includes other
+                                                                                              input.                                               scripting as well.
+                           OWASP-IV-                 SQL Injection                            Ensure the application will not
+InputValidation.           002                                                                process SQL commands from the
+SQL                                                                                           user.
+                           OWASP-IV-                 OS Command Injection                     Ensure the applications will not                     This typically
+InputValidation.           003                                                                process operating system                             includes issues such
+OS                                                                                            commands from the user.                              as path traversal,
+                                                                                                                                                   spawning command
+                                                                                                                                                   shells and OS
+                                                                                                                                                   functions.
+                           OWASP-IV-                 LDAP Injection                           Ensure the application will not
+InputValidation.           004                                                                process LDAP commands form
+LDAP                                                                                          the user.
+                           OWASP-IV-                 Cross Site Scripting                     Ensure that the application will not
+InputValidation.           005                                                                store or reflect malicious script
+XSS                                                                                           code.
+
+
+
+
+                                                                  The OWASP Web Application Penetration Check List
+     This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and understand that license and copyright conditions.
+Category                  Ref Number                Name                                     Objective                                            Notes
+                          OWASP-BO-                 Overflows                                Ensure that the application is not                   Fuzzing tools help
+BufferOverflow            001                                                                susceptible to any buffer                            with testing all
+                                                                                             overflows.                                           components of an
+                                                                                                                                                  application for this
+                                                                                                                                                  issue.
+                          OWASP-BO-                 Heap Overflows                           Ensure that the application is not
+                          002                                                                susceptible to any heap overflows.
+                          OWASP-BO-                 Stack Overflows                          Ensure that the application is not
+                          003                                                                susceptible to any stack overflows.
+                          OWASP-BO-                 Format Strings                           Ensure that the application is not
+                          004                                                                susceptible to any format string
+                                                                                             overflows.
+
+
+
+
+                                                                 The OWASP Web Application Penetration Check List
+    This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and understand that license and copyright conditions.
+Appendix A - The OASIS WAS Vulnerability Types
+AppDOS
+Flaws which may would allow an attacker to completely or partially prevent users from
+using an application properly.
+AppDOS.Flood
+Used for application denial of service problems that involve saturating a limited resource
+shared by all users of the application, such as disk space, CPU, network bandwidth,
+database connections, or memory.
+AppDOS.Lockout
+Used for application denial of service problems that involve using up a resource or limit
+allocated to users, such as failed logon attempts, messages, or transactions.
+AccessControl
+Problems which may allow users to access assets or functions they are not authorized for.
+Frequently, there is no access control mechanism where there should be. A proper access
+control mechanism should enforce the principles of a reference monitor: tamperproof,
+and analyzable.
+Authentication
+Used for problems related to determining the identity of individuals or entities and
+authenticating that identity.
+Authentication.User
+Used for issues related to identification and authentication of people who are intended to
+use an application. Problems with usernames, passwords, tokens, smartcards, biometrics,
+and other credentials are examples.
+Authentication.UserManagement
+Used for problems related to managing a set of users, especially the security relevant
+information such as roles, privileges, authorizations, groups, social security numbers,
+credit card numbers, and other sensitive information. Also problems with creating new
+users, registration, granting rights, and terminating access.
+Authentication.Entity
+Used for problems with authenticating automated systems, such as web services,
+databases, directories, and others. Examples include secure credential storage, securing
+transport, changing credentials, and terminating access.
+Authentication.SessionManagement
+Used for problems with issuing, using, protecting, changing, and terminating session
+identifiers of all kinds. Session identifiers stand in the place of authentication credentials
+yet are frequently not protected as carefully.
+BufferOverflow
+Flaws which may allow an attacker to use format strings to overwrite locations in
+memory, allowing data to be changed, program control to be altered, or the program to
+crash.
+BufferOverflow.Heap
+Flaws which may allow an attacker to overflow memory that is dynamically allocated by
+the application.
+
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+BufferOverflow.Stack
+Flaws which may allow an attacker to write data into the stack, causing the program to
+crash or transfer control.
+BufferOverflow.Format
+Flaws which may allow an attacker to use format strings to overwrite locations in
+memory, allowing data to be changed, program control to be altered, or the program to
+crash.
+Concurrency
+Used for errors in multithreaded environments that allows data to be shared or corrupted.
+Examples include variables that are shared between threads and cause time-of-check-
+time-of-use (TOCTOU) problems, broken singleton patterns, and poor cache design.
+ConfigurationManagement
+Used to describe problems in the configuration of an application or application
+environment.
+ConfigurationManagement.Administration
+Used for problems in the application's mechanisms that enable remote administration,
+such as user management, credential management, database management, and other
+configuration options.
+ConfigurationManagement.Application
+Used to describe problems in the application's configuration, such as mis-configured
+security mechanisms, default programs, unused code, and unnecessarily enabled features.
+ConfigurationManagement.Infrastrure
+Used for problems with the configuration of the application's infrastructure, such as the
+web and application servers, filters, and external security mechanisms.
+Cryptography
+Used for problems related to encryption, decryption, signing, and verification.
+Cryptography.Algorithm
+Used for cryptographic algorithm selection, implementation, and analysis problems.
+Cryptography.KeyManagement
+Used for issues with certificate storage, tokens, revocation, certificates, key stores,
+issuing keys, and other key issues
+DataProtection
+Used for issues related to inappropriate disclosure of data.
+DataProtection.Storage
+Used for problems storing data securely, including storage of credentials, keys, and other
+sensitive information. Mistakes related to cryptographic mechanisms include poor
+sources of randomness, bad choice of algorithm, and poor implementation.
+DataProtection.Transport
+Used for problems related to secure transfer of information. Frequently, this will refer to
+problems with SSL or TLS configuration, but could include other protocols with security
+features.
+ErrorHandling
+Used for problems in handling errors, including printing stack traces to the screen, fail
+open security mechanisms, allowing errors to affect the operation of the entire
+application, and revealing too much information about a failure.
+
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+InputValidation
+Used for issues related to failure to validate un-trusted input before it is relied on by an
+application.
+InputValidation.User
+Used for input validation problems where the input comes from a human user, such as
+HTTP request parameters, command line input, or input events from an application's
+GUI.
+InputValidation.Network
+Used for input validation problems where the input comes from a network protocol, such
+as HTTP headers, sequence numbers, or other protocol fields.
+InputValidation.File
+Used for input validation problems where the input comes from a file, such as a
+properties file, batch data file, flat-file databases, or other file based data.
+Injection
+Problems which may allow an attacker to bury commands into data and have them
+interpreted by some system that the data reaches.
+Injection.SQL
+Flaws which may allow an attacker to inject special characters and commands into a SQL
+database and modify the intended query. The attack might attempt to change the meaning
+of the query, or might attempt to chain additional commands.
+Injection.HTML
+Flaws which may allow an attacker to inject HTML into an application and modify the
+appearance of HTML generated by that application. For example, an attacker might inject
+an unwanted IMG tag into a guest book, and offend other users.
+Injection.OSCommand
+Flaws which may allow an attacker to inject special characters and commands into the
+operating system command shell and modify the intended command. The attack might
+attempt to modify how a program is invoked, or might attempt to chain additional
+commands.
+Injection.LDAP
+Flaws which may allow an attacker to inject special characters and search terms into an
+LDAP server and modify the intended query.
+Injection.XSS
+Flaws which may allow an attacker to send and execute malicious scripts through a web
+application. Stored XSS attacks store the script in the web application. Reflected XSS
+attacks are bounced off a web application in real time and require a user to be tricked into
+sending the request containing the attack.
+Monitoring
+Used for issues related to monitoring the security posture of a web application.
+Monitoring.Logging
+Used for issues concerning the proper logging of events, including what should be
+logged, how it should be logged, how logs should be reviewed, and other issues related to
+accountability.
+Monitoring.Detection
+Used for issues related to the detection of attacks on an application, how attacks should
+be handled, what information should be gathered, and who should be notified.
+                                      The OWASP Web Application Penetration Check List
+This document is released under the GNU documentation license and is Copyrighted to the OWASP Foundation. You should read and
+                                        understand that license and copyright conditions.
+

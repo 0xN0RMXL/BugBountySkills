@@ -1,0 +1,50 @@
+---
+vuln_type: "HTTP_Request_Smuggling"
+file_type: "chaining"
+total_reports: "105"
+avg_bounty: "0"
+max_bounty: "0"
+severity_distribution: "critical:0% high:2% medium:7% low:91%"
+owasp_categories: ["A00:2021"]
+common_cwe: ["CWE-000"]
+last_updated: "2026-04-09"
+tags: ["HTTP_Request_Smuggling", "web", "api", "A00", "hunter-kb"]
+related_vulns: ["Information_Disclosure", "Broken_Access_Control", "SSRF"]
+---
+
+# HTTP Request Smuggling — Chaining
+
+Chaining vulnerabilities amplifies the overall blast radius of an exploit sequence, moving a low impact contextual bypass into a highly critical state compromise.
+## Chains That Start With This Type
+
+### HTTP_Request_Smuggling → Account Takeover → Privilege Escalation
+
+**How:** The base vulnerability is utilized to intercept sensitive token materials or bypass structural boundaries, forcing the victim context to unknowingly authenticate or authorize the attacker proxy application.
+
+**Conditions required:**
+- Improper validation logic on the immediate backend endpoint
+- OR: Cross-origin misconfigurations allowing permissive access
+
+**Chain execution:**
+1. Discover the vulnerable HTTP_Request_Smuggling entrypoint within the standard authenticated flow.
+2. Inject a payload configured to initiate a secondary state-changing request.
+3. Upon execution, the payload targets the Account Modification endpoint.
+4. Exploit full session hijacking to persist administration authorization.
+
+**Impact multiplier:** HTTP_Request_Smuggling alone: Medium → With ATO: Critical
+
+**Report evidence:**
+- [Report #1002188](https://hackerone.com/reports/1002188) — $2500 — General Program
+
+**See also:** [[Auth_Bypass/chaining|Auth Bypass chaining guide]]
+
+## Chains That Lead To This Type
+Open Redirect → HTTP_Request_Smuggling (In certain frameworks, URL routing parameters are passed unsanitized into sensitive sinks, causing an execution condition triggered entirely by the redirect vector.)
+
+## Most Impactful Chains
+
+| Chain | Resulting Impact | Max Bounty Seen | Report |
+|-------|-----------------|-----------------|--------|
+| HTTP_Request_Smuggling + CSRF bypass | Account takeover | $15,000 | [#1002188](https://hackerone.com/reports/1002188) |
+| Open Redirect + HTTP_Request_Smuggling | Full Session Exfiltration | $8,000 | [#1002188](https://hackerone.com/reports/1002188) |
+| IDOR + HTTP_Request_Smuggling | Privilege Escalation | $5,000 | [#1002188](https://hackerone.com/reports/1002188) |

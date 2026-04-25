@@ -1,0 +1,12 @@
+# Checklist: API General
+- [ ] Discover API version paths (/v1, /v2, /api, /rest, /graphql, /grpc)
+- [ ] Test all CRUD verbs on every resource
+- [ ] Test for BOLA, BFLA on every endpoint
+- [ ] Test for missing auth (drop Authorization header)
+- [ ] Test for missing rate limiting (especially on PUT/DELETE)
+- [ ] Test for mass assignment (extra JSON fields)
+- [ ] Test for filter injection (sort, filter, raw query params)
+- [ ] Test pagination bypass (offset, page, limit edge cases)
+- [ ] Test content-type juggling (JSON ↔ form ↔ XML)
+- [ ] Check Swagger / OpenAPI docs (if exposed)
+- [ ] Check API gateway behavior (path normalization, header pass-through)

@@ -1,0 +1,17 @@
+# Checklist: Auth Bypass
+- [ ] Test SQLi in login (`admin'-- -`, `' OR 1=1-- -`)
+- [ ] Test default creds (admin/admin, admin/password, root/root, test/test)
+- [ ] Test rate limiting on login (X-Forwarded-For bypass)
+- [ ] Test password reset flow (token entropy, expiry, reuse)
+- [ ] Test 2FA bypass (response manipulation, token reuse, downgrade to SMS)
+- [ ] Test OAuth flow (state CSRF, redirect_uri abuse, code interception)
+- [ ] Test SAML (XSW, comment-injection, signature bypass)
+- [ ] Test session fixation (preset SESSION cookie, login → it persists)
+- [ ] Test session validity (logout properly invalidates? cookies expire?)
+- [ ] Test concurrent sessions (race on login)
+- [ ] Test JWT attacks (alg:none, weak key, kid injection, jku/x5u)
+- [ ] Test header-based auth bypass (X-Forwarded-User, X-Original-URL, X-Rewrite-URL)
+- [ ] Test admin path with no creds (might be IP-allowlisted but allowlist is bypassable)
+- [ ] Test GraphQL queries that bypass auth middleware
+- [ ] Test sensitive endpoints with empty auth, malformed token, expired token
+- [ ] Test mass assignment to escalate role

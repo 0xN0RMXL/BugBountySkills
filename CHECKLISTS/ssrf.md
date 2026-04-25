@@ -1,0 +1,16 @@
+# Checklist: SSRF
+- [ ] Find URL/host/redirect parameters
+- [ ] Image-fetch endpoints, webhooks, URL preview, OAuth callbacks
+- [ ] Try internal IPs: 127.0.0.1, 169.254.169.254, 10.0.0.1
+- [ ] Try cloud metadata endpoints (AWS / GCP / Azure / Alibaba)
+- [ ] Try IP encoding bypasses (octal, decimal, hex, IPv6 mapped)
+- [ ] Try URL parser confusion (@, #, \\\\, %)
+- [ ] Try alternative schemes (file://, gopher://, dict://, ldap://, ftp://)
+- [ ] DNS rebinding (rbndr.us, lock.cmpxchg8b.com)
+- [ ] Test for blind SSRF (interactsh, webhook.site, dnslog.cn)
+- [ ] If hits IMDS → curl IAM creds → `aws sts get-caller-identity`
+- [ ] If hits internal Redis → gopher payload for RCE
+- [ ] If hits internal HTTP service → screenshot admin panels
+- [ ] Test all HTTP methods
+- [ ] Test PUT for IMDSv2 token
+- [ ] Header injection via SSRF target URL

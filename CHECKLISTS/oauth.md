@@ -1,0 +1,11 @@
+# Checklist: OAuth
+- [ ] Identify flow type (auth code, implicit, PKCE)
+- [ ] Test redirect_uri allowlist bypasses (subdomain, scheme, query, hash, path traversal)
+- [ ] Test state parameter — missing → CSRF / forced linking
+- [ ] Test code reuse (single-use enforced?)
+- [ ] Test code expiry
+- [ ] Test access_token in URL fragment vs body
+- [ ] Test scope escalation (request more scopes than UI allows)
+- [ ] Test session fixation via OAuth callback
+- [ ] Test OIDC id_token validation (alg, signature, aud, iss)
+- [ ] Test for confused deputy (account-linking abuse)

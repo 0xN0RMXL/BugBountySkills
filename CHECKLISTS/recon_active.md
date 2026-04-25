@@ -1,0 +1,19 @@
+# Checklist: Active Recon
+- [ ] alterx / gotator for permutations on known subdomains
+- [ ] puredns brute with massive wordlist (n0kovo's, jhaddix all.txt)
+- [ ] dnsx for resolving + record types (A, AAAA, CNAME, MX, NS, TXT, SOA)
+- [ ] httpx for alive enumeration (status, title, tech-detect, ip)
+- [ ] naabu / masscan / nmap for port scan (top 1000 + custom)
+- [ ] nmap -sC -sV -p- on alive hosts (full scan)
+- [ ] gowitness / aquatone for visual recon
+- [ ] katana / hakrawler for crawl + endpoint extraction
+- [ ] LinkFinder / xnLinkFinder for endpoints in JS
+- [ ] ffuf / dirsearch / feroxbuster for content discovery
+- [ ] arjun / paramspider / x8 for hidden parameters
+- [ ] gau + qsreplace + nuclei for fuzz pipeline
+- [ ] WAF detection (wafw00f) — pick payload class accordingly
+- [ ] Tech fingerprint (Wappalyzer / httpx -tech-detect / WhatWeb)
+- [ ] Test default creds on admin paths (admin/admin, root/root)
+- [ ] Subdomain takeover scan (subzy / nuclei takeovers)
+- [ ] Cloud asset enum (S3, GCS, Azure Blobs)
+- [ ] Mobile API scan if app target

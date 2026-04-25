@@ -1,0 +1,19 @@
+# Checklist: XSS
+- [ ] Test every input that reaches HTML output (search, profile, comment, email body, error message customization)
+- [ ] Categorize by context: HTML body, attribute, JS string, URL, SVG
+- [ ] Identify reflection point exactly (View page source; trace which character is encoded)
+- [ ] Try minimal payload first (`<svg/onload=alert(1)>`)
+- [ ] Test for stored XSS — payload persists across page reload
+- [ ] Test for DOM XSS — sources/sinks via DOM Invader (Burp built-in)
+- [ ] Test for mXSS — DOMPurify mutation bypass
+- [ ] Test in admin-visible context (support tickets, audit logs, admin dashboards)
+- [ ] Test in email body (HTML email render)
+- [ ] Test in PDF / DOCX render (server-side)
+- [ ] Test in SVG upload (rendered inline)
+- [ ] Test in Markdown render
+- [ ] Test in CSV (CSV injection)
+- [ ] Test in postMessage handler
+- [ ] Test in URL parameter rendered as href / src
+- [ ] Verify CSP blocks payloads — find bypass if so
+- [ ] Show impact: cookie steal → ATO, internal API call, exfil PII
+- [ ] Don't use alert(1) in PoC — use alert(document.domain)
