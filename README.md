@@ -4,10 +4,6 @@
 > Load into any LLM → your AI becomes an elite bug bounty partner.
 > Use without AI → the most complete hunting knowledge vault you own.
 
-[![Stars](https://img.shields.io/github/stars/0xN0RMXL/BugBountySkills?style=flat-square&color=red)](https://github.com/0xN0RMXL/BugBountySkills/stargazers)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-[![Files](https://img.shields.io/badge/Files-615-blue?style=flat-square)]()
-[![Lines](https://img.shields.io/badge/Lines-76k-green?style=flat-square)]()
 
 ---
 
